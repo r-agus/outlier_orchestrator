@@ -17,13 +17,13 @@ class OrchestratorController {
       const experimentData = req.body;
       
       // Validar que se recibieron datos experimentales
-      if (!experimentData || !experimentData.data) {
+      if (!experimentData || !experimentData.experiments) {
         return res.status(StatusCodes.BAD_REQUEST).json({
-          error: 'Se requieren datos experimentales para realizar la predicción'
+          error: 'Se requieren datos en formato experiments para realizar la predicción'
         });
       }
       
-      logger.info(`Recibida petición de predicción con ${experimentData.data.length} puntos de datos`);
+      logger.info(`Recibida petición de predicción con ${experimentData.experiments.length} experimentos`);
       
       // Procesar predicción con el orquestador
       const result = await orchestratorService.orchestrate(experimentData);
@@ -61,25 +61,40 @@ class OrchestratorController {
       const trainingData = req.body;
       
       // Validar que se recibieron datos de entrenamiento
-      if (!trainingData || !trainingData.data) {
+      if (!trainingData) {
         return res.status(StatusCodes.BAD_REQUEST).json({
           error: 'Se requieren datos de entrenamiento'
         });
       }
       
-      logger.info(`Recibida petición de entrenamiento con ${trainingData.data.length} puntos de datos`);
+      // Validar que el formato sea experiments
+      if (!trainingData.experiments || !Array.isArray(trainingData.experiments) || trainingData.experiments.length === 0) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          error: 'Formato de datos inválido. Se espera un objeto con un array de "experiments"'
+        });
+      }
       
-      // Enviar datos de entrenamiento a todos los modelos
-      const result = await orchestratorService.trainModels(trainingData);
+      logger.info(`Recibida petición de entrenamiento con ${trainingData.experiments.length} experimentos`);
       
-      return res.status(StatusCodes.OK).json({
-        message: 'Entrenamiento iniciado en los modelos disponibles',
-        details: result
-      });
+      try {
+        // Enviar datos de entrenamiento a todos los modelos
+        const result = await orchestratorService.trainModels(trainingData);
+        
+        return res.status(StatusCodes.OK).json({
+          message: 'Entrenamiento iniciado correctamente',
+          details: result
+        });
+      } catch (error) {
+        logger.error(`Error al enviar datos a modelos: ${error.message}`);
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          error: 'Error al enviar datos a los modelos',
+          message: error.message
+        });
+      }
     } catch (error) {
       logger.error(`Error en entrenamiento: ${error.message}`);
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        error: 'Error al procesar el entrenamiento',
+        error: 'Error al procesar la petición de entrenamiento',
         message: error.message
       });
     }
