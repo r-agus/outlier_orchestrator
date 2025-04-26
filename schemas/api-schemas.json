@@ -1,0 +1,334 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Esquemas de API para Sistema de Clasificación de Anomalías",
+  "description": "Definiciones de esquemas JSON para la comunicación entre el orquestador y los modelos de clasificación",
+  
+  "definitions": {
+    "experiment": {
+      "type": "object",
+      "required": ["id", "sensors"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identificador único del experimento/descarga"
+        },
+        "times": {
+          "type": "array",
+          "description": "Array de tiempos comunes para todos los sensores del experimento (opcional)",
+          "items": {
+            "type": "number"
+          }
+        },
+        "length": {
+          "type": "integer",
+          "description": "Longitud total de los datos (puede omitirse si se incluyen los tiempos)"
+        },
+        "anomalyTime": {
+          "type": ["number", "null"],
+          "description": "Tiempo en el que ocurre la anomalía (si la descarga es disruptiva)"
+        },
+        "sensors": {
+          "type": "array",
+          "description": "Array de sensores incluidos en este experimento",
+          "items": {
+            "type": "object",
+            "required": ["fileName", "values"],
+            "properties": {
+              "fileName": {
+                "type": "string",
+                "description": "Nombre del archivo del sensor"
+              },
+              "values": {
+                "type": "array",
+                "description": "Array de valores numéricos del sensor",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "times": {
+                "type": "array",
+                "description": "Array de tiempos específicos para este sensor (solo si no hay tiempos comunes a nivel de experimento)",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "length": {
+                "type": "integer",
+                "description": "Longitud de datos para este sensor (puede omitirse si se incluyen los tiempos)"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "schemas": {
+    "predictionRequest": {
+      "type": "object",
+      "required": ["experiments"],
+      "properties": {
+        "experiments": {
+          "type": "array",
+          "description": "Array de experimentos para realizar predicción",
+          "items": {
+            "$ref": "#/definitions/experiment"
+          }
+        }
+      },
+      "example": {
+        "experiments": [
+          {
+            "id": "74467",
+            "times": [41.0520, 41.0540, 41.0560],
+            "length": 12031,
+            "sensors": [
+              {
+                "fileName": "DES_74467_01_r2_sliding.txt",
+                "values": [-759337, -760461, -761585]
+              },
+              {
+                "fileName": "DES_74467_02_r2_sliding.txt",
+                "values": [273.4, 273.2, 272.9]
+              }
+            ]
+          }
+        ]
+      }
+    },
+
+    "predictionResponse": {
+      "type": "object",
+      "required": ["prediction"],
+      "properties": {
+        "prediction": {
+          "type": "integer",
+          "enum": [0, 1],
+          "description": "Clasificación predicha (0: normal, 1: anomalía)"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Nivel de confianza de la predicción (0-1)"
+        },
+        "executionTimeMs": {
+          "type": "number",
+          "description": "Tiempo de ejecución en milisegundos"
+        },
+        "model": {
+          "type": "string",
+          "description": "Identificador del modelo utilizado"
+        },
+        "details": {
+          "type": "object",
+          "description": "Detalles adicionales específicos del modelo (opcional)"
+        }
+      },
+      "example": {
+        "prediction": 1,
+        "confidence": 0.95,
+        "executionTimeMs": 123,
+        "model": "svm",
+        "details": {
+          "featureImportance": [0.3, 0.2, 0.5]
+        }
+      }
+    },
+
+    "trainingRequest": {
+      "type": "object",
+      "required": ["experiments"],
+      "properties": {
+        "experiments": {
+          "type": "array",
+          "description": "Array de experimentos para entrenamiento",
+          "items": {
+            "$ref": "#/definitions/experiment"
+          }
+        },
+        "options": {
+          "type": "object",
+          "description": "Opciones de entrenamiento (opcional)",
+          "properties": {
+            "epochs": {
+              "type": "integer",
+              "description": "Número de épocas para modelos de redes neuronales"
+            },
+            "batchSize": {
+              "type": "integer",
+              "description": "Tamaño del batch para entrenamiento"
+            },
+            "hyperparameters": {
+              "type": "object",
+              "description": "Hiperparámetros personalizados para el modelo"
+            }
+          }
+        }
+      },
+      "example": {
+        "experiments": [
+          {
+            "id": "74467",
+            "anomalyTime": 41.0562,
+            "times": [41.0520, 41.0540, 41.0560],
+            "sensors": [
+              {
+                "fileName": "DES_74467_01_r2_sliding.txt",
+                "values": [-759337, -760461, -761585]
+              }
+            ]
+          },
+          {
+            "id": "74468",
+            "times": [41.0520, 41.0540, 41.0560],
+            "sensors": [
+              {
+                "fileName": "DES_74468_01_r2_sliding.txt",
+                "values": [-759337, -760461, -761585]
+              }
+            ]
+          }
+        ],
+        "options": {
+          "epochs": 100,
+          "batchSize": 32
+        }
+      }
+    },
+
+    "trainingResponse": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["success", "error", "in_progress"],
+          "description": "Estado del entrenamiento"
+        },
+        "message": {
+          "type": "string",
+          "description": "Mensaje descriptivo del resultado"
+        },
+        "trainingId": {
+          "type": "string",
+          "description": "ID único del entrenamiento (para consultar estado si es asíncrono)"
+        },
+        "metrics": {
+          "type": "object",
+          "description": "Métricas del entrenamiento (opcional)",
+          "properties": {
+            "accuracy": {
+              "type": "number",
+              "description": "Precisión del modelo"
+            },
+            "loss": {
+              "type": "number",
+              "description": "Pérdida final del entrenamiento"
+            },
+            "f1Score": {
+              "type": "number",
+              "description": "Puntuación F1"
+            }
+          }
+        },
+        "executionTimeMs": {
+          "type": "number",
+          "description": "Tiempo de ejecución en milisegundos"
+        }
+      },
+      "example": {
+        "status": "success",
+        "message": "Entrenamiento completado con éxito",
+        "trainingId": "train_20250426_123456",
+        "metrics": {
+          "accuracy": 0.95,
+          "loss": 0.12,
+          "f1Score": 0.94
+        },
+        "executionTimeMs": 15000
+      }
+    },
+
+    "healthCheckResponse": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["online", "offline", "degraded"],
+          "description": "Estado actual del modelo"
+        },
+        "version": {
+          "type": "string",
+          "description": "Versión del modelo o servicio"
+        },
+        "uptime": {
+          "type": "number",
+          "description": "Tiempo de actividad en segundos"
+        },
+        "memory": {
+          "type": "object",
+          "description": "Información de uso de memoria",
+          "properties": {
+            "total": {
+              "type": "number",
+              "description": "Memoria total asignada (MB)"
+            },
+            "used": {
+              "type": "number",
+              "description": "Memoria utilizada (MB)"
+            }
+          }
+        },
+        "load": {
+          "type": "number",
+          "description": "Carga actual del sistema (0-1)"
+        },
+        "lastTraining": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Fecha y hora del último entrenamiento"
+        }
+      },
+      "example": {
+        "status": "online",
+        "version": "1.2.3",
+        "uptime": 3600,
+        "memory": {
+          "total": 1024,
+          "used": 512
+        },
+        "load": 0.3,
+        "lastTraining": "2025-04-25T12:34:56Z"
+      }
+    },
+
+    "errorResponse": {
+      "type": "object",
+      "required": ["error"],
+      "properties": {
+        "error": {
+          "type": "string",
+          "description": "Mensaje de error"
+        },
+        "code": {
+          "type": "string",
+          "description": "Código de error (opcional)"
+        },
+        "details": {
+          "type": "object",
+          "description": "Detalles adicionales del error (opcional)"
+        }
+      },
+      "example": {
+        "error": "Formato de datos inválido",
+        "code": "INVALID_FORMAT",
+        "details": {
+          "missingFields": ["sensors"],
+          "invalidFields": ["times"]
+        }
+      }
+    }
+  }
+}
