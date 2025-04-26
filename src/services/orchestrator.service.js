@@ -320,26 +320,26 @@ class OrchestratorService {
   }
 
   /**
-   * Parsea un conjunto de archivos de texto de sensores
+   * Parsea un conjunto de archivos de texto de señales
    * @param {Array<Object>} files - Array de objetos con {name, content}
    * @param {Object} anomalyTimes - Objeto con los tiempos de anomalía por nombre de archivo
    * @returns {Object} - Objeto con los datos en formato para API
    */
   parseSensorFiles(files, anomalyTimes = {}) {
-    const sensors = [];
+    const signals = [];
     
     for (const file of files) {
       try {
         const anomalyTime = anomalyTimes[file.name] || null;
         const sensorData = SensorData.fromTextFile(file.name, file.content, anomalyTime);
-        sensors.push(sensorData);
+        signals.push(sensorData);
       } catch (error) {
         logger.error(`Error parsing sensor file ${file.name}: ${error.message}`);
         throw new Error(`Error parsing sensor file ${file.name}: ${error.message}`);
       }
     }
     
-    return { sensors };
+    return { signals };
   }
 }
 

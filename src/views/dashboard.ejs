@@ -234,7 +234,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="alert alert-info mb-3">
-                                    <strong>Información:</strong> Puede cargar múltiples archivos de texto (.txt) que contienen datos de sensores o utilizar el formato JSON directamente.
+                                    <strong>Información:</strong> Puede cargar múltiples archivos de texto (.txt) que contienen datos de señales o utilizar el formato JSON directamente.
                                 </div>
                                 
                                 <ul class="nav nav-pills mb-3" id="predictionOptions" role="tablist">
@@ -250,16 +250,16 @@
                                     <!-- Opción de archivos de texto -->
                                     <div class="tab-pane fade show active" id="text-files-content" role="tabpanel" aria-labelledby="text-files-tab">
                                         <div class="mb-3">
-                                            <label class="form-label">Archivos de sensores (.txt)</label>
+                                            <label class="form-label">Archivos de señales (.txt)</label>
                                             <input type="file" class="form-control" id="sensorFilesInput" multiple accept=".txt">
-                                            <div class="form-text">Seleccione los archivos de texto con los datos de los sensores (un archivo por sensor).</div>
+                                            <div class="form-text">Seleccione los archivos de texto con los datos de las señales (un archivo por sensor).</div>
                                         </div>
                                         
                                         <div class="sensor-files-container mb-3" id="sensorFilesContainer">
                                             <div class="text-center text-muted py-3" id="noFilesMsg">
                                                 No hay archivos cargados
                                             </div>
-                                            <!-- Los archivos de sensores se mostrarán aquí -->
+                                            <!-- Los archivos de señales se mostrarán aquí -->
                                         </div>
                                         
                                         <div class="d-grid">
@@ -278,7 +278,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="testDataTextarea" class="form-label">Datos (formato JSON)</label>
-                                            <textarea class="form-control" id="testDataTextarea" rows="8" placeholder='{ "sensors": [{ "fileName": "sensor1.txt", "times": [41.052, 41.054, ...], "values": [-759337, -760461, ...], "length": 5, "anomalyTime": null }] }'></textarea>
+                                            <textarea class="form-control" id="testDataTextarea" rows="8" placeholder='{ "signals": [{ "fileName": "sensor1.txt", "times": [41.052, 41.054, ...], "values": [-759337, -760461, ...], "length": 5, "anomalyTime": null }] }'></textarea>
                                         </div>
                                         <div class="d-grid">
                                             <button id="testPredictionBtn" class="btn btn-primary">Realizar Predicción</button>
@@ -374,7 +374,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="trainingDataTextarea" class="form-label">Datos (formato JSON)</label>
-                                            <textarea class="form-control" id="trainingDataTextarea" rows="8" placeholder='{ "sensors": [{ "fileName": "sensor1.txt", "times": [41.052, 41.054, ...], "values": [-759337, -760461, ...], "length": 5, "anomalyTime": 41.056 }] }'></textarea>
+                                            <textarea class="form-control" id="trainingDataTextarea" rows="8" placeholder='{ "signals": [{ "fileName": "sensor1.txt", "times": [41.052, 41.054, ...], "values": [-759337, -760461, ...], "length": 5, "anomalyTime": 41.056 }] }'></textarea>
                                         </div>
                                         <div class="d-grid">
                                             <button id="startTrainingBtn" class="btn btn-warning">Iniciar Entrenamiento</button>
@@ -479,7 +479,7 @@
         let configModal;
         let filePreviewModal;
 
-        // Gestión de archivos de sensores para predicción
+        // Gestión de archivos de señales para predicción
         let sensorFiles = [];
         // Array de descargas de entrenamiendo. Cada descarga tiene: id, files[], anomalyTime
         let discharges = [];
@@ -571,7 +571,7 @@
             document.getElementById('predictionHistory').innerHTML = historyHtml;
         }
 
-        // Renderizar archivos de sensores cargados
+        // Renderizar archivos de señales cargados
         function renderSensorFiles() {
             const container = document.getElementById('sensorFilesContainer');
             const noFilesMsg = document.getElementById('noFilesMsg');
@@ -690,7 +690,7 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">Archivos de sensores (.txt):</label>
+                            <label class="form-label">Archivos de señales (.txt):</label>
                             <input type="file" class="form-control discharge-files-input" 
                                     multiple accept=".txt" data-discharge-id="${discharge.id}">
                         </div>
@@ -855,7 +855,7 @@
                 // Crear estructura para el experimento/descarga
                 const experimentData = {
                     id: dischargeId,
-                    sensors: []
+                    signals: []
                 };
                 
                 // Añadir tiempo de anomalía si está definido
@@ -932,7 +932,7 @@
                             }
                         }
                         
-                        experimentData.sensors.push(sensorData);
+                        experimentData.signals.push(sensorData);
                     } catch (error) {
                         console.error(`Error al procesar archivo ${file.name}:`, error);
                     }
@@ -945,7 +945,7 @@
             document.getElementById('jsonPreview').textContent = JSON.stringify(previewData, null, 2);
         }
 
-        // Procesar los archivos de sensores para crear el formato JSON adecuado
+        // Procesar los archivos de señales para crear el formato JSON adecuado
         function processSensorFiles(files, anomalyTimes) {
             try {
                 // Agrupar archivos por experimento (extraer ID de descarga del nombre)
@@ -1007,7 +1007,7 @@
                     
                     const experiment = {
                         id: group.id,
-                        sensors: []
+                        signals: []
                     };
                     
                     // Añadir tiempo de anomalía si existe
@@ -1048,7 +1048,7 @@
                             sensorData.length = times.length;
                         }
                         
-                        experiment.sensors.push(sensorData);
+                        experiment.signals.push(sensorData);
                     });
                     
                     experiments.push(experiment);
@@ -1094,7 +1094,7 @@
                     
                     const experimentData = {
                         id: dischargeId,
-                        sensors: []
+                        signals: []
                     };
                     
                     // Añadir tiempo de anomalía si está definido
@@ -1169,7 +1169,7 @@
                                 sensorData.length = fileTimes.length;
                             }
                             
-                            experimentData.sensors.push(sensorData);
+                            experimentData.signals.push(sensorData);
                             
                         } catch (error) {
                             throw new Error(`Error al procesar el archivo ${file.name}: ${error.message}`);
@@ -1483,13 +1483,13 @@
                     // Crear formato de experimento
                     const experiment = {
                         id: "sample_experiment",
-                        sensors: []
+                        signals: []
                     };
                     
-                    // Extraer datos de muestra y crear sensores
+                    // Extraer datos de muestra y crear señales
                     if (data.data) {
                         const times = [];
-                        // Crear array de tiempos para todos los sensores
+                        // Crear array de tiempos para todas las señales
                         for (let i = 0; i < data.data.length; i++) {
                             times.push(41.05 + i * 0.01);
                         }
@@ -1502,7 +1502,7 @@
                         for (let i = 0; i < 7; i++) {
                             const values = data.data.map(point => point[i]);
                             
-                            experiment.sensors.push({
+                            experiment.signals.push({
                                 fileName: `sensor${i+1}.txt`,
                                 values: values
                             });

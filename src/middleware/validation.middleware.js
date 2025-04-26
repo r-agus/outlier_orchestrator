@@ -27,14 +27,14 @@ function validateExperimentalData(req, res, next) {
     
     // Validar cada experimento
     for (const experiment of data.experiments) {
-      // Verificar que tiene ID y sensores
+      // Verificar que tiene ID y señales
       if (!experiment.id) {
         return res.status(StatusCodes.BAD_REQUEST).json({
           error: 'Cada experimento debe tener un ID'
         });
       }
       
-      if (!experiment.sensors || !Array.isArray(experiment.sensors) || experiment.sensors.length === 0) {
+      if (!experiment.signals || !Array.isArray(experiment.signals) || experiment.signals.length === 0) {
         return res.status(StatusCodes.BAD_REQUEST).json({
           error: `El experimento ${experiment.id} debe tener al menos un sensor`
         });
@@ -56,8 +56,8 @@ function validateExperimentalData(req, res, next) {
         }
       }
       
-      // Validar sensores
-      for (const sensor of experiment.sensors) {
+      // Validar señales
+      for (const sensor of experiment.signals) {
         // Verificar nombre de archivo
         if (!sensor.fileName) {
           return res.status(StatusCodes.BAD_REQUEST).json({
@@ -110,7 +110,7 @@ function validateExperimentalData(req, res, next) {
       }
     }
     
-    logger.info(`Validación exitosa: ${data.experiments.length} experimentos con datos de sensores`);
+    logger.info(`Validación exitosa: ${data.experiments.length} experimentos con datos de señales`);
     next();
   } catch (error) {
     logger.error(`Error en validación de datos: ${error.message}`);

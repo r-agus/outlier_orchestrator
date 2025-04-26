@@ -6,7 +6,7 @@
   "definitions": {
     "experiment": {
       "type": "object",
-      "required": ["id", "sensors"],
+      "required": ["id", "signals"],
       "properties": {
         "id": {
           "type": "string",
@@ -14,7 +14,7 @@
         },
         "times": {
           "type": "array",
-          "description": "Array de tiempos comunes para todos los sensores del experimento (opcional)",
+          "description": "Array de tiempos comunes para todos las señales del experimento (opcional)",
           "items": {
             "type": "number"
           }
@@ -27,9 +27,9 @@
           "type": ["number", "null"],
           "description": "Tiempo en el que ocurre la anomalía (si la descarga es disruptiva)"
         },
-        "sensors": {
+        "signals": {
           "type": "array",
-          "description": "Array de sensores incluidos en este experimento",
+          "description": "Array de señales incluidos en este experimento",
           "items": {
             "type": "object",
             "required": ["fileName", "values"],
@@ -82,7 +82,7 @@
             "id": "74467",
             "times": [41.0520, 41.0540, 41.0560],
             "length": 12031,
-            "sensors": [
+            "signals": [
               {
                 "fileName": "DES_74467_01_r2_sliding.txt",
                 "values": [-759337, -760461, -761585]
@@ -172,7 +172,7 @@
             "id": "74467",
             "anomalyTime": 41.0562,
             "times": [41.0520, 41.0540, 41.0560],
-            "sensors": [
+            "signals": [
               {
                 "fileName": "DES_74467_01_r2_sliding.txt",
                 "values": [-759337, -760461, -761585]
@@ -182,7 +182,7 @@
           {
             "id": "74468",
             "times": [41.0520, 41.0540, 41.0560],
-            "sensors": [
+            "signals": [
               {
                 "fileName": "DES_74468_01_r2_sliding.txt",
                 "values": [-759337, -760461, -761585]
@@ -325,7 +325,7 @@
         "error": "Formato de datos inválido",
         "code": "INVALID_FORMAT",
         "details": {
-          "missingFields": ["sensors"],
+          "missingFields": ["signals"],
           "invalidFields": ["times"]
         }
       }
