@@ -1,0 +1,59 @@
+# Dependencias
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+package-lock.json
+yarn.lock
+
+# Entorno
+.env
+.env.test
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs/
+*.log
+combined.log
+error.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE y editores
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime*
+.project
+.classpath
+.settings/
+
+# Archivos temporales
+tmp/
+temp/
+.tmp/
+.temp/
+.cache/
+dist/
+build/
+
+# Configuraciones locales y archivos de datos
+config.local.js
+/data/
+/uploads/
+
+# Cobertura de pruebas
+coverage/
+.nyc_output/
+
+# Otros
+*.bak
+*.tar.gz
+*.zip
