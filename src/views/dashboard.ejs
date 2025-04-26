@@ -1306,6 +1306,13 @@
             }
         };
 
+        // Mostrar vista previa de archivo
+        function showFilePreview(fileName, content) {
+            document.getElementById('filePreviewTitle').textContent = fileName;
+            document.getElementById('filePreviewContent').textContent = content;
+            filePreviewModal.show();
+        }
+
         // Cuando se carga el DOM
         document.addEventListener('DOMContentLoaded', function() {
             predictionDetailsModal = new bootstrap.Modal(document.getElementById('predictionDetailsModal'));
