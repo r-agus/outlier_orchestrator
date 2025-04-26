@@ -26,77 +26,77 @@ function validateExperimentalData(req, res, next) {
     }
     
     // Validar cada experimento
-    for (const experiment of data.experiments) {
+    for (const discharge of data.experiments) {
       // Verificar que tiene ID y señales
-      if (!experiment.id) {
+      if (!discharge.id) {
         return res.status(StatusCodes.BAD_REQUEST).json({
           error: 'Cada experimento debe tener un ID'
         });
       }
       
-      if (!experiment.signals || !Array.isArray(experiment.signals) || experiment.signals.length === 0) {
+      if (!discharge.signals || !Array.isArray(discharge.signals) || discharge.signals.length === 0) {
         return res.status(StatusCodes.BAD_REQUEST).json({
-          error: `El experimento ${experiment.id} debe tener al menos un sensor`
+          error: `El experimento ${discharge.id} debe tener al menos un sensor`
         });
       }
       
       // Si tiene tiempos a nivel de experimento, validarlos
-      if (experiment.times) {
-        if (!Array.isArray(experiment.times) || experiment.times.length === 0) {
+      if (discharge.times) {
+        if (!Array.isArray(discharge.times) || discharge.times.length === 0) {
           return res.status(StatusCodes.BAD_REQUEST).json({
-            error: `El experimento ${experiment.id} tiene un formato de tiempos inválido`
+            error: `El experimento ${discharge.id} tiene un formato de tiempos inválido`
           });
         }
         
         // Verificar que todos los valores son numéricos
-        if (experiment.times.some(value => typeof value !== 'number' || isNaN(value))) {
+        if (discharge.times.some(value => typeof value !== 'number' || isNaN(value))) {
           return res.status(StatusCodes.BAD_REQUEST).json({
-            error: `El experimento ${experiment.id} tiene valores de tiempo no numéricos`
+            error: `El experimento ${discharge.id} tiene valores de tiempo no numéricos`
           });
         }
       }
       
       // Validar señales
-      for (const sensor of experiment.signals) {
+      for (const sensor of discharge.signals) {
         // Verificar nombre de archivo
         if (!sensor.fileName) {
           return res.status(StatusCodes.BAD_REQUEST).json({
-            error: `Sensor sin nombre de archivo en experimento ${experiment.id}`
+            error: `Sensor sin nombre de archivo en experimento ${discharge.id}`
           });
         }
         
         // Verificar valores
         if (!Array.isArray(sensor.values) || sensor.values.length === 0) {
           return res.status(StatusCodes.BAD_REQUEST).json({
-            error: `El sensor ${sensor.fileName} del experimento ${experiment.id} debe tener un array de valores no vacío`
+            error: `El sensor ${sensor.fileName} del experimento ${discharge.id} debe tener un array de valores no vacío`
           });
         }
         
         // Si el experimento no tiene tiempos comunes, el sensor debe tenerlos
-        if (!experiment.times) {
+        if (!discharge.times) {
           if (!Array.isArray(sensor.times) || sensor.times.length === 0) {
             return res.status(StatusCodes.BAD_REQUEST).json({
-              error: `El sensor ${sensor.fileName} del experimento ${experiment.id} debe tener un array de tiempos cuando no hay tiempos a nivel de experimento`
+              error: `El sensor ${sensor.fileName} del experimento ${discharge.id} debe tener un array de tiempos cuando no hay tiempos a nivel de experimento`
             });
           }
           
           if (sensor.times.length !== sensor.values.length) {
             return res.status(StatusCodes.BAD_REQUEST).json({
-              error: `El sensor ${sensor.fileName} del experimento ${experiment.id} tiene diferentes longitudes para tiempos (${sensor.times.length}) y valores (${sensor.values.length})`
+              error: `El sensor ${sensor.fileName} del experimento ${discharge.id} tiene diferentes longitudes para tiempos (${sensor.times.length}) y valores (${sensor.values.length})`
             });
           }
           
           // Verificar que los tiempos son numéricos
           if (sensor.times.some(value => typeof value !== 'number' || isNaN(value))) {
             return res.status(StatusCodes.BAD_REQUEST).json({
-              error: `El sensor ${sensor.fileName} del experimento ${experiment.id} tiene valores de tiempo no numéricos`
+              error: `El sensor ${sensor.fileName} del experimento ${discharge.id} tiene valores de tiempo no numéricos`
             });
           }
         } else {
           // Si hay tiempos a nivel de experimento, verificar que las longitudes coincidan
-          if (experiment.times.length !== sensor.values.length) {
+          if (discharge.times.length !== sensor.values.length) {
             return res.status(StatusCodes.BAD_REQUEST).json({
-              error: `El sensor ${sensor.fileName} del experimento ${experiment.id} tiene una longitud de valores (${sensor.values.length}) que no coincide con la longitud de tiempos del experimento (${experiment.times.length})`
+              error: `El sensor ${sensor.fileName} del experimento ${discharge.id} tiene una longitud de valores (${sensor.values.length}) que no coincide con la longitud de tiempos del experimento (${discharge.times.length})`
             });
           }
         }
@@ -104,7 +104,7 @@ function validateExperimentalData(req, res, next) {
         // Verificar que los valores son numéricos
         if (sensor.values.some(value => typeof value !== 'number' || isNaN(value))) {
           return res.status(StatusCodes.BAD_REQUEST).json({
-            error: `El sensor ${sensor.fileName} del experimento ${experiment.id} tiene valores no numéricos`
+            error: `El sensor ${sensor.fileName} del experimento ${discharge.id} tiene valores no numéricos`
           });
         }
       }

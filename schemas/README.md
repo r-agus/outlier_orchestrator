@@ -18,7 +18,7 @@ El archivo `api-schemas.json` define los siguientes esquemas:
 
 ### Formato de Datos Base
 
-- `experiment` - Estructura base de un experimento/descarga con sus señales
+- `discharge` - Estructura base de un experimento/descarga con sus señales
 
 ### Solicitudes
 

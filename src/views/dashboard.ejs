@@ -1005,20 +1005,20 @@
                         }
                     });
                     
-                    const experiment = {
+                    const discharge = {
                         id: group.id,
                         signals: []
                     };
                     
                     // Añadir tiempo de anomalía si existe
                     if (group.anomalyTime !== null) {
-                        experiment.anomalyTime = group.anomalyTime;
+                        discharge.anomalyTime = group.anomalyTime;
                     }
                     
                     // Si todos tienen los mismos tiempos, añadirlos a nivel de experimento
                     if (allSameTime && firstFileTimes && firstFileTimes.length > 0) {
-                        experiment.times = firstFileTimes;
-                        experiment.length = firstFileTimes.length;
+                        discharge.times = firstFileTimes;
+                        discharge.length = firstFileTimes.length;
                     }
                     
                     // Procesar cada archivo
@@ -1048,10 +1048,10 @@
                             sensorData.length = times.length;
                         }
                         
-                        experiment.signals.push(sensorData);
+                        discharge.signals.push(sensorData);
                     });
                     
-                    experiments.push(experiment);
+                    experiments.push(discharge);
                 });
                 
                 return { experiments };
@@ -1481,7 +1481,7 @@
                 .then(response => response.json())
                 .then(data => {
                     // Crear formato de experimento
-                    const experiment = {
+                    const discharge = {
                         id: "sample_experiment",
                         signals: []
                     };
@@ -1495,14 +1495,14 @@
                         }
                         
                         // Añadir tiempos comunes al experimento
-                        experiment.times = times;
-                        experiment.length = times.length;
+                        discharge.times = times;
+                        discharge.length = times.length;
                         
                         // Crear un sensor por cada columna en los datos
                         for (let i = 0; i < 7; i++) {
                             const values = data.data.map(point => point[i]);
                             
-                            experiment.signals.push({
+                            discharge.signals.push({
                                 fileName: `sensor${i+1}.txt`,
                                 values: values
                             });
@@ -1510,12 +1510,12 @@
                         
                         // Añadir tiempo de anomalía (para fines de ejemplo)
                         const anomalyIndex = Math.floor(Math.random() * times.length);
-                        experiment.anomalyTime = times[anomalyIndex];
+                        discharge.anomalyTime = times[anomalyIndex];
                     }
                     
                     // Mostrar en el textarea
                     document.getElementById('trainingDataTextarea').value = JSON.stringify({ 
-                        experiments: [experiment] 
+                        experiments: [discharge] 
                     }, null, 2);
                 })
                 .catch(error => {
