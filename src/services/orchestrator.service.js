@@ -1,6 +1,7 @@
 const axios = require('axios');
 const config = require('../config');
 const logger = require('../utils/logger');
+const SensorData = require('../models/sensor-data.model');
 
 /**
  * Clase que implementa la orquestación de modelos y el mecanismo de votación
@@ -15,7 +16,7 @@ class OrchestratorService {
   /**
    * Envía los datos a un modelo específico
    * @param {string} modelName - Nombre del modelo
-   * @param {Object} data - Datos para la predicción
+   * @param {Object} data - Datos para la predicción (formato antiguo o nuevo)
    * @returns {Promise} - Promesa con la respuesta del modelo
    */
   async callModel(modelName, data) {
@@ -55,7 +56,7 @@ class OrchestratorService {
   /**
    * Envía datos de entrenamiento a un modelo específico
    * @param {string} modelName - Nombre del modelo
-   * @param {Object} data - Datos para entrenamiento
+   * @param {Object} data - Datos para entrenamiento (formato antiguo o nuevo)
    * @returns {Promise} - Promesa con la respuesta del modelo
    */
   async trainModel(modelName, data) {
@@ -94,11 +95,15 @@ class OrchestratorService {
 
   /**
    * Distribuye los datos a todos los modelos habilitados
-   * @param {Object} data - Datos para la predicción
+   * @param {Object} data - Datos para la predicción (formato antiguo o nuevo)
    * @returns {Promise<Object>} - Resultados de todos los modelos y votación final
    */
   async orchestrate(data) {
     logger.info('Starting orchestration process');
+    
+    // Determinar qué formato de datos se está usando
+    const isNewFormat = data.sensors && Array.isArray(data.sensors);
+    logger.info(`Usando formato ${isNewFormat ? 'nuevo' : 'antiguo'} para predicción`);
     
     const enabledModels = Object.keys(this.models)
       .filter(model => this.models[model].enabled);
@@ -129,11 +134,15 @@ class OrchestratorService {
 
   /**
    * Envía datos de entrenamiento a todos los modelos habilitados
-   * @param {Object} data - Datos para entrenamiento
+   * @param {Object} data - Datos para entrenamiento (formato antiguo o nuevo)
    * @returns {Promise<Object>} - Resultados de todos los modelos
    */
   async trainModels(data) {
     logger.info('Starting training process for all models');
+    
+    // Determinar qué formato de datos se está usando
+    const isNewFormat = data.sensors && Array.isArray(data.sensors);
+    logger.info(`Usando formato ${isNewFormat ? 'nuevo' : 'antiguo'} para entrenamiento`);
     
     const enabledModels = Object.keys(this.models)
       .filter(model => this.models[model].enabled);
@@ -300,6 +309,29 @@ class OrchestratorService {
       models: results,
       availableModels: results.filter(m => m.available).length
     };
+  }
+
+  /**
+   * Parsea un conjunto de archivos de texto de sensores
+   * @param {Array<Object>} files - Array de objetos con {name, content}
+   * @param {Object} anomalyTimes - Objeto con los tiempos de anomalía por nombre de archivo
+   * @returns {Object} - Objeto con los datos en formato para API
+   */
+  parseSensorFiles(files, anomalyTimes = {}) {
+    const sensors = [];
+    
+    for (const file of files) {
+      try {
+        const anomalyTime = anomalyTimes[file.name] || null;
+        const sensorData = SensorData.fromTextFile(file.name, file.content, anomalyTime);
+        sensors.push(sensorData);
+      } catch (error) {
+        logger.error(`Error parsing sensor file ${file.name}: ${error.message}`);
+        throw new Error(`Error parsing sensor file ${file.name}: ${error.message}`);
+      }
+    }
+    
+    return { sensors };
   }
 }
 
