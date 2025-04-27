@@ -59,7 +59,7 @@ Ejemplo de payload:
     ...
   ],
   "metadata": {
-    "experimentId": "exp123",
+    "dischargesId": "exp123",
     "sampleRate": 16
   }
 }

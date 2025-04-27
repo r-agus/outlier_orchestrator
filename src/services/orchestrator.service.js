@@ -16,7 +16,7 @@ class OrchestratorService {
   /**
    * Envía los datos a un modelo específico
    * @param {string} modelName - Nombre del modelo
-   * @param {Object} data - Datos para la predicción (formato experiments)
+   * @param {Object} data - Datos para la predicción (formato discharges)
    * @returns {Promise} - Promesa con la respuesta del modelo
    */
   async callModel(modelName, data) {
@@ -56,7 +56,7 @@ class OrchestratorService {
   /**
    * Envía datos de entrenamiento a un modelo específico
    * @param {string} modelName - Nombre del modelo
-   * @param {Object} data - Datos para entrenamiento (formato experiments)
+   * @param {Object} data - Datos para entrenamiento (formato discharges)
    * @returns {Promise} - Promesa con la respuesta del modelo
    */
   async trainModel(modelName, data) {
@@ -95,19 +95,19 @@ class OrchestratorService {
 
   /**
    * Distribuye los datos a todos los modelos habilitados
-   * @param {Object} data - Datos para la predicción (formato experiments)
+   * @param {Object} data - Datos para la predicción (formato discharges)
    * @returns {Promise<Object>} - Resultados de todos los modelos y votación final
    */
   async orchestrate(data) {
     logger.info('Starting orchestration process');
     
     // Validar formato de datos
-    if (!data.experiments || !Array.isArray(data.experiments)) {
-      logger.error('Formato de datos inválido: se espera un objeto con array "experiments"');
-      throw new Error('Formato de datos inválido: se espera un objeto con array "experiments"');
+    if (!data.discharges || !Array.isArray(data.discharges)) {
+      logger.error('Formato de datos inválido: se espera un objeto con array "discharges"');
+      throw new Error('Formato de datos inválido: se espera un objeto con array "discharges"');
     }
     
-    logger.info(`Procesando predicción con ${data.experiments.length} experimentos`);
+    logger.info(`Procesando predicción con ${data.discharges.length} descargas`);
     
     const enabledModels = Object.keys(this.models)
       .filter(model => this.models[model].enabled);
@@ -138,19 +138,19 @@ class OrchestratorService {
 
   /**
    * Envía datos de entrenamiento a todos los modelos habilitados
-   * @param {Object} data - Datos para entrenamiento (formato experiments)
+   * @param {Object} data - Datos para entrenamiento (formato discharges)
    * @returns {Promise<Object>} - Resultados de todos los modelos
    */
   async trainModels(data) {
     logger.info('Starting training process for all models');
     
     // Validar formato de datos
-    if (!data.experiments || !Array.isArray(data.experiments)) {
-      logger.error('Formato de datos inválido: se espera un objeto con array "experiments"');
-      throw new Error('Formato de datos inválido: se espera un objeto con array "experiments"');
+    if (!data.discharges || !Array.isArray(data.discharges)) {
+      logger.error('Formato de datos inválido: se espera un objeto con array "discharges"');
+      throw new Error('Formato de datos inválido: se espera un objeto con array "discharges"');
     }
     
-    logger.info(`Procesando entrenamiento con ${data.experiments.length} experimentos`);
+    logger.info(`Procesando entrenamiento con ${data.discharges.length} descargas`);
     
     const enabledModels = Object.keys(this.models)
       .filter(model => this.models[model].enabled);
@@ -290,7 +290,7 @@ class OrchestratorService {
         const response = await axios({
           method: 'get',
           url: healthUrl,
-          timeout: this.timeout / 2
+          timeout: this.timeout
         });
         
         return {

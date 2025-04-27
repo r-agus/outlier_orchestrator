@@ -1,13 +1,13 @@
 const express = require('express');
 const orchestratorController = require('../controllers/orchestrator.controller');
-const { validateExperimentalData, validateModelConfig } = require('../middleware/validation.middleware');
+const { validatedischargealData, validateModelConfig } = require('../middleware/validation.middleware');
 const router = express.Router();
 
 // Ruta para realizar predicciones
-router.post('/predict', validateExperimentalData, orchestratorController.predict);
+router.post('/predict', validatedischargealData, orchestratorController.predict);
 
 // Ruta para entrenamiento de modelos
-router.post('/train', validateExperimentalData, orchestratorController.train);
+router.post('/train', validatedischargealData, orchestratorController.train);
 
 // Ruta para verificar la salud de los servicios
 router.get('/health', orchestratorController.health);

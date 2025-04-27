@@ -12,7 +12,7 @@
     [1.7, 1.0, 2.6, 0.3, 1.2, 2.5, 0.8]
   ],
   "metadata": {
-    "experimentId": "exp123",
+    "dischargesId": "exp123",
     "sampleRate": 16,
     "description": "Datos de ejemplo para prueba del sistema de clasificación"
   }

@@ -10,11 +10,11 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "Identificador único del experimento/descarga"
+          "description": "Identificador único de la descarga"
         },
         "times": {
           "type": "array",
-          "description": "Array de tiempos comunes para todos las señales del experimento (opcional)",
+          "description": "Array de tiempos comunes para todas las señales del descarga (opcional)",
           "items": {
             "type": "number"
           }
@@ -29,7 +29,7 @@
         },
         "signals": {
           "type": "array",
-          "description": "Array de señales incluidos en este experimento",
+          "description": "Array de señales incluidos en este descarga",
           "items": {
             "type": "object",
             "required": ["fileName", "values"],
@@ -47,7 +47,7 @@
               },
               "times": {
                 "type": "array",
-                "description": "Array de tiempos específicos para este sensor (solo si no hay tiempos comunes a nivel de experimento)",
+                "description": "Array de tiempos específicos para este sensor (solo si no hay tiempos comunes a nivel de descarga)",
                 "items": {
                   "type": "number"
                 }
@@ -66,18 +66,18 @@
   "schemas": {
     "predictionRequest": {
       "type": "object",
-      "required": ["experiments"],
+      "required": ["discharges"],
       "properties": {
-        "experiments": {
+        "discharges": {
           "type": "array",
-          "description": "Array de experimentos para realizar predicción",
+          "description": "Array de descargas para realizar predicción",
           "items": {
             "$ref": "#/definitions/discharge"
           }
         }
       },
       "example": {
-        "experiments": [
+        "discharges": [
           {
             "id": "74467",
             "times": [41.0520, 41.0540, 41.0560],
@@ -138,11 +138,11 @@
 
     "trainingRequest": {
       "type": "object",
-      "required": ["experiments"],
+      "required": ["discharges"],
       "properties": {
-        "experiments": {
+        "discharges": {
           "type": "array",
-          "description": "Array de experimentos para entrenamiento",
+          "description": "Array de descargas para entrenamiento",
           "items": {
             "$ref": "#/definitions/discharge"
           }
@@ -167,7 +167,7 @@
         }
       },
       "example": {
-        "experiments": [
+        "discharges": [
           {
             "id": "74467",
             "anomalyTime": 41.0562,

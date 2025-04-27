@@ -832,9 +832,9 @@
             }
             
             // Crear estructura de datos para la vista previa con formato optimizado
-            const previewData = { experiments: [] };
+            const previewData = { discharges: [] };
             
-            // Procesar cada descarga como un experimento
+            // Procesar cada descarga como un descarga
             discharges.forEach(discharge => {
                 if (discharge.files.length === 0) {
                     return; // Saltamos descargas sin archivos
@@ -852,15 +852,15 @@
                     }
                 }
                 
-                // Crear estructura para el experimento/descarga
-                const experimentData = {
+                // Crear estructura para el descarga/descarga
+                const dischargeData = {
                     id: dischargeId,
                     signals: []
                 };
                 
                 // Añadir tiempo de anomalía si está definido
                 if (discharge.anomalyTime !== null) {
-                    experimentData.anomalyTime = discharge.anomalyTime;
+                    dischargeData.anomalyTime = discharge.anomalyTime;
                 }
                 
                 // Verificar si todos los archivos tienen los mismos tiempos
@@ -888,13 +888,13 @@
                     }
                 });
                 
-                // Si todos tienen los mismos tiempos, los guardamos a nivel de experimento
+                // Si todos tienen los mismos tiempos, los guardamos a nivel de descarga
                 if (allSameTime && firstFileTimes) {
-                    experimentData.times = firstFileTimes;
+                    dischargeData.times = firstFileTimes;
                     const totalLines = discharge.files[0].content.trim().split('\n').length;
-                    experimentData.length = totalLines;
+                    dischargeData.length = totalLines;
                     if (totalLines > 5) {
-                        experimentData._previewNote = `... se muestran 5 de ${totalLines} líneas`;
+                        dischargeData._previewNote = `... se muestran 5 de ${totalLines} líneas`;
                     }
                 }
                 
@@ -932,13 +932,13 @@
                             }
                         }
                         
-                        experimentData.signals.push(sensorData);
+                        dischargeData.signals.push(sensorData);
                     } catch (error) {
                         console.error(`Error al procesar archivo ${file.name}:`, error);
                     }
                 });
                 
-                previewData.experiments.push(experimentData);
+                previewData.discharges.push(dischargeData);
             });
             
             // Formatear el JSON para mostrarlo
@@ -948,21 +948,21 @@
         // Procesar los archivos de señales para crear el formato JSON adecuado
         function processSensorFiles(files, anomalyTimes) {
             try {
-                // Agrupar archivos por experimento (extraer ID de descarga del nombre)
-                const experimentGroups = {};
+                // Agrupar archivos por descarga (extraer ID de descarga del nombre)
+                const dischargeGroups = {};
                 
                 files.forEach(file => {
                     // Intentar extraer ID de descarga del nombre del archivo
-                    let experimentId = "unknown";
+                    let dischargeId = "unknown";
                     const match = file.name.match(/DES_(\d+)/i);
                     if (match && match[1]) {
-                        experimentId = match[1];
+                        dischargeId = match[1];
                     }
                     
                     // Crear grupo si no existe
-                    if (!experimentGroups[experimentId]) {
-                        experimentGroups[experimentId] = {
-                            id: experimentId,
+                    if (!dischargeGroups[dischargeId]) {
+                        dischargeGroups[dischargeId] = {
+                            id: dischargeId,
                             files: [],
                             commonTimes: null,
                             anomalyTime: null
@@ -970,19 +970,19 @@
                     }
                     
                     // Añadir archivo al grupo
-                    experimentGroups[experimentId].files.push(file);
+                    dischargeGroups[dischargeId].files.push(file);
                     
                     // Si hay tiempo de anomalía para este archivo, asignarlo al grupo
                     if (anomalyTimes[file.name]) {
-                        experimentGroups[experimentId].anomalyTime = anomalyTimes[file.name];
+                        dischargeGroups[dischargeId].anomalyTime = anomalyTimes[file.name];
                     }
                 });
                 
-                // Construir formato de experimentos
-                const experiments = [];
+                // Construir formato de descargas
+                const discharges = [];
                 
                 // Procesar cada grupo
-                Object.values(experimentGroups).forEach(group => {
+                Object.values(dischargeGroups).forEach(group => {
                     // Verificar si todos los archivos tienen los mismos tiempos
                     let allSameTime = true;
                     let firstFileTimes = null;
@@ -1015,7 +1015,7 @@
                         discharge.anomalyTime = group.anomalyTime;
                     }
                     
-                    // Si todos tienen los mismos tiempos, añadirlos a nivel de experimento
+                    // Si todos tienen los mismos tiempos, añadirlos a nivel de descarga
                     if (allSameTime && firstFileTimes && firstFileTimes.length > 0) {
                         discharge.times = firstFileTimes;
                         discharge.length = firstFileTimes.length;
@@ -1051,10 +1051,10 @@
                         discharge.signals.push(sensorData);
                     });
                     
-                    experiments.push(discharge);
+                    discharges.push(discharge);
                 });
                 
-                return { experiments };
+                return { discharges };
                 
             } catch (error) {
                 throw new Error(`Error al procesar archivos: ${error.message}`);
@@ -1069,9 +1069,9 @@
                 }
                 
                 // Estructura de datos optimizada para la API
-                const trainingData = { experiments: [] };
+                const trainingData = { discharges: [] };
                 
-                // Procesar cada descarga como un experimento independiente
+                // Procesar cada descarga como un descarga independiente
                 discharges.forEach(discharge => {
                     // Verificar si hay archivos
                     if (discharge.files.length === 0) {
@@ -1092,14 +1092,14 @@
                         }
                     }
                     
-                    const experimentData = {
+                    const dischargeData = {
                         id: dischargeId,
                         signals: []
                     };
                     
                     // Añadir tiempo de anomalía si está definido
                     if (discharge.anomalyTime !== null) {
-                        experimentData.anomalyTime = discharge.anomalyTime;
+                        dischargeData.anomalyTime = discharge.anomalyTime;
                     }
                     
                     // Procesamos todos los tiempos para verificar que son iguales en todos los archivos
@@ -1129,10 +1129,10 @@
                         }
                     });
                     
-                    // Si todos tienen los mismos tiempos, los guardamos a nivel de experimento
+                    // Si todos tienen los mismos tiempos, los guardamos a nivel de descarga
                     if (allSameTime && firstFileTimes) {
-                        experimentData.times = firstFileTimes;
-                        experimentData.length = firstFileTimes.length;
+                        dischargeData.times = firstFileTimes;
+                        dischargeData.length = firstFileTimes.length;
                     }
                     
                     // Procesamos los valores de cada archivo
@@ -1169,18 +1169,18 @@
                                 sensorData.length = fileTimes.length;
                             }
                             
-                            experimentData.signals.push(sensorData);
+                            dischargeData.signals.push(sensorData);
                             
                         } catch (error) {
                             throw new Error(`Error al procesar el archivo ${file.name}: ${error.message}`);
                         }
                     });
                     
-                    trainingData.experiments.push(experimentData);
+                    trainingData.discharges.push(dischargeData);
                 });
                 
-                // Verificar si se procesó algún experimento
-                if (trainingData.experiments.length === 0) {
+                // Verificar si se procesó algún descarga
+                if (trainingData.discharges.length === 0) {
                     throw new Error('No hay archivos válidos para entrenar');
                 }
                 
@@ -1480,9 +1480,9 @@
                 fetch('/sample_data.json')
                 .then(response => response.json())
                 .then(data => {
-                    // Crear formato de experimento
+                    // Crear formato de descarga
                     const discharge = {
-                        id: "sample_experiment",
+                        id: "sample_discharge",
                         signals: []
                     };
                     
@@ -1494,7 +1494,7 @@
                             times.push(41.05 + i * 0.01);
                         }
                         
-                        // Añadir tiempos comunes al experimento
+                        // Añadir tiempos comunes al descarga
                         discharge.times = times;
                         discharge.length = times.length;
                         
@@ -1515,7 +1515,7 @@
                     
                     // Mostrar en el textarea
                     document.getElementById('trainingDataTextarea').value = JSON.stringify({ 
-                        experiments: [discharge] 
+                        discharges: [discharge] 
                     }, null, 2);
                 })
                 .catch(error => {
@@ -1551,9 +1551,9 @@
                 try {
                     const trainingData = JSON.parse(trainingDataElem.value);
                     
-                    // Verificar que el formato es correcto (solo experiments)
-                    if (!trainingData.experiments || !Array.isArray(trainingData.experiments)) {
-                        throw new Error('Los datos deben tener un array "experiments"');
+                    // Verificar que el formato es correcto (solo discharges)
+                    if (!trainingData.discharges || !Array.isArray(trainingData.discharges)) {
+                        throw new Error('Los datos deben tener un array "discharges"');
                     }
                     
                     fetch('/api/train', {

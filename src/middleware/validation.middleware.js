@@ -2,56 +2,56 @@ const { StatusCodes } = require('http-status-codes');
 const logger = require('../utils/logger');
 
 /**
- * Middleware para validar el formato de los datos experimentales (formato experiments)
+ * Middleware para validar el formato de los datos experimentales (formato discharges)
  * @param {Request} req - Objeto de solicitud HTTP
  * @param {Response} res - Objeto de respuesta HTTP
  * @param {Function} next - Función para continuar con el siguiente middleware
  */
-function validateExperimentalData(req, res, next) {
+function validatedischargealData(req, res, next) {
   const data = req.body;
   
   try {
-    // Validar formato experiments
-    if (!data || !data.experiments || !Array.isArray(data.experiments)) {
+    // Validar formato discharges
+    if (!data || !data.discharges || !Array.isArray(data.discharges)) {
       return res.status(StatusCodes.BAD_REQUEST).json({
-        error: 'Formato de datos no válido. Se espera un objeto con un array "experiments"'
+        error: 'Formato de datos no válido. Se espera un objeto con un array "discharges"'
       });
     }
     
-    // Verificar que hay al menos un experimento
-    if (data.experiments.length === 0) {
+    // Verificar que hay al menos un descarga
+    if (data.discharges.length === 0) {
       return res.status(StatusCodes.BAD_REQUEST).json({
-        error: 'Se requiere al menos un experimento'
+        error: 'Se requiere al menos un descarga'
       });
     }
     
-    // Validar cada experimento
-    for (const discharge of data.experiments) {
+    // Validar cada descarga
+    for (const discharge of data.discharges) {
       // Verificar que tiene ID y señales
       if (!discharge.id) {
         return res.status(StatusCodes.BAD_REQUEST).json({
-          error: 'Cada experimento debe tener un ID'
+          error: 'Cada descarga debe tener un ID'
         });
       }
       
       if (!discharge.signals || !Array.isArray(discharge.signals) || discharge.signals.length === 0) {
         return res.status(StatusCodes.BAD_REQUEST).json({
-          error: `El experimento ${discharge.id} debe tener al menos un sensor`
+          error: `El descarga ${discharge.id} debe tener al menos un sensor`
         });
       }
       
-      // Si tiene tiempos a nivel de experimento, validarlos
+      // Si tiene tiempos a nivel de descarga, validarlos
       if (discharge.times) {
         if (!Array.isArray(discharge.times) || discharge.times.length === 0) {
           return res.status(StatusCodes.BAD_REQUEST).json({
-            error: `El experimento ${discharge.id} tiene un formato de tiempos inválido`
+            error: `El descarga ${discharge.id} tiene un formato de tiempos inválido`
           });
         }
         
         // Verificar que todos los valores son numéricos
         if (discharge.times.some(value => typeof value !== 'number' || isNaN(value))) {
           return res.status(StatusCodes.BAD_REQUEST).json({
-            error: `El experimento ${discharge.id} tiene valores de tiempo no numéricos`
+            error: `El descarga ${discharge.id} tiene valores de tiempo no numéricos`
           });
         }
       }
@@ -61,42 +61,42 @@ function validateExperimentalData(req, res, next) {
         // Verificar nombre de archivo
         if (!sensor.fileName) {
           return res.status(StatusCodes.BAD_REQUEST).json({
-            error: `Sensor sin nombre de archivo en experimento ${discharge.id}`
+            error: `Sensor sin nombre de archivo en descarga ${discharge.id}`
           });
         }
         
         // Verificar valores
         if (!Array.isArray(sensor.values) || sensor.values.length === 0) {
           return res.status(StatusCodes.BAD_REQUEST).json({
-            error: `El sensor ${sensor.fileName} del experimento ${discharge.id} debe tener un array de valores no vacío`
+            error: `El sensor ${sensor.fileName} del descarga ${discharge.id} debe tener un array de valores no vacío`
           });
         }
         
-        // Si el experimento no tiene tiempos comunes, el sensor debe tenerlos
+        // Si el descarga no tiene tiempos comunes, el sensor debe tenerlos
         if (!discharge.times) {
           if (!Array.isArray(sensor.times) || sensor.times.length === 0) {
             return res.status(StatusCodes.BAD_REQUEST).json({
-              error: `El sensor ${sensor.fileName} del experimento ${discharge.id} debe tener un array de tiempos cuando no hay tiempos a nivel de experimento`
+              error: `El sensor ${sensor.fileName} del descarga ${discharge.id} debe tener un array de tiempos cuando no hay tiempos a nivel de descarga`
             });
           }
           
           if (sensor.times.length !== sensor.values.length) {
             return res.status(StatusCodes.BAD_REQUEST).json({
-              error: `El sensor ${sensor.fileName} del experimento ${discharge.id} tiene diferentes longitudes para tiempos (${sensor.times.length}) y valores (${sensor.values.length})`
+              error: `El sensor ${sensor.fileName} del descarga ${discharge.id} tiene diferentes longitudes para tiempos (${sensor.times.length}) y valores (${sensor.values.length})`
             });
           }
           
           // Verificar que los tiempos son numéricos
           if (sensor.times.some(value => typeof value !== 'number' || isNaN(value))) {
             return res.status(StatusCodes.BAD_REQUEST).json({
-              error: `El sensor ${sensor.fileName} del experimento ${discharge.id} tiene valores de tiempo no numéricos`
+              error: `El sensor ${sensor.fileName} del descarga ${discharge.id} tiene valores de tiempo no numéricos`
             });
           }
         } else {
-          // Si hay tiempos a nivel de experimento, verificar que las longitudes coincidan
+          // Si hay tiempos a nivel de descarga, verificar que las longitudes coincidan
           if (discharge.times.length !== sensor.values.length) {
             return res.status(StatusCodes.BAD_REQUEST).json({
-              error: `El sensor ${sensor.fileName} del experimento ${discharge.id} tiene una longitud de valores (${sensor.values.length}) que no coincide con la longitud de tiempos del experimento (${discharge.times.length})`
+              error: `El sensor ${sensor.fileName} del descarga ${discharge.id} tiene una longitud de valores (${sensor.values.length}) que no coincide con la longitud de tiempos del descarga (${discharge.times.length})`
             });
           }
         }
@@ -104,18 +104,18 @@ function validateExperimentalData(req, res, next) {
         // Verificar que los valores son numéricos
         if (sensor.values.some(value => typeof value !== 'number' || isNaN(value))) {
           return res.status(StatusCodes.BAD_REQUEST).json({
-            error: `El sensor ${sensor.fileName} del experimento ${discharge.id} tiene valores no numéricos`
+            error: `El sensor ${sensor.fileName} del descarga ${discharge.id} tiene valores no numéricos`
           });
         }
       }
     }
     
-    logger.info(`Validación exitosa: ${data.experiments.length} experimentos con datos de señales`);
+    logger.info(`Validación exitosa: ${data.discharges.length} descargas con datos de señales`);
     next();
   } catch (error) {
     logger.error(`Error en validación de datos: ${error.message}`);
     return res.status(StatusCodes.BAD_REQUEST).json({
-      error: 'Error en la validación de los datos experimentales',
+      error: 'Error en la validación de los datos dischargeales',
       details: error.message
     });
   }
@@ -146,6 +146,6 @@ function validateModelConfig(req, res, next) {
 }
 
 module.exports = {
-  validateExperimentalData,
+  validatedischargealData,
   validateModelConfig
 };

@@ -14,19 +14,19 @@ class OrchestratorController {
    */
   async predict(req, res) {
     try {
-      const experimentData = req.body;
+      const dischargeData = req.body;
       
       // Validar que se recibieron datos experimentales
-      if (!experimentData || !experimentData.experiments) {
+      if (!dischargeData || !dischargeData.discharges) {
         return res.status(StatusCodes.BAD_REQUEST).json({
-          error: 'Se requieren datos en formato experiments para realizar la predicción'
+          error: 'Se requieren datos en formato discharges para realizar la predicción'
         });
       }
       
-      logger.info(`Recibida petición de predicción con ${experimentData.experiments.length} experimentos`);
+      logger.info(`Recibida petición de predicción con ${dischargeData.discharges.length} descargas`);
       
       // Procesar predicción con el orquestador
-      const result = await orchestratorService.orchestrate(experimentData);
+      const result = await orchestratorService.orchestrate(dischargeData);
       
       // Determinar el código de estado según el resultado
       if (result.voting.decision === null) {
@@ -67,14 +67,14 @@ class OrchestratorController {
         });
       }
       
-      // Validar que el formato sea experiments
-      if (!trainingData.experiments || !Array.isArray(trainingData.experiments) || trainingData.experiments.length === 0) {
+      // Validar que el formato sea discharges
+      if (!trainingData.discharges || !Array.isArray(trainingData.discharges) || trainingData.discharges.length === 0) {
         return res.status(StatusCodes.BAD_REQUEST).json({
-          error: 'Formato de datos inválido. Se espera un objeto con un array de "experiments"'
+          error: 'Formato de datos inválido. Se espera un objeto con un array de "discharges"'
         });
       }
       
-      logger.info(`Recibida petición de entrenamiento con ${trainingData.experiments.length} experimentos`);
+      logger.info(`Recibida petición de entrenamiento con ${trainingData.discharges.length} descargas`);
       
       try {
         // Enviar datos de entrenamiento a todos los modelos
