@@ -1236,6 +1236,19 @@
                                         data-type="train">Actualizar</button>
                                 </div>
                             </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">URL de Health Check:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control model-url" 
+                                        data-model="${model.name}"
+                                        data-type="health"
+                                        value="${model.healthUrl}">
+                                    <button class="btn btn-outline-primary update-url-btn" 
+                                        data-model="${model.name}"
+                                        data-type="health">Actualizar</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `;
