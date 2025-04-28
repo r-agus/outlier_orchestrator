@@ -172,7 +172,7 @@
     <div class="container">
         <header class="pb-3 mb-4 border-bottom">
             <div class="d-flex justify-content-between align-items-center">
-                <h1 class="fw-bold">Sistema de Clasificación Binaria</h1>
+                <h1 class="fw-bold">Sistema de Detección de Anomalías</h1>
                 <div>
                     <button id="refreshBtn" class="btn btn-sm btn-outline-secondary">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
@@ -542,7 +542,6 @@
                 return;
             }
 
-            document.getElementById('noPredictionsMsg').style.display = 'none';
             const historyHtml = predictionHistory.map((prediction, index) => {
                 const predClass = prediction.result !== null ? prediction.result : 'undefined';
                 const confidenceWidth = prediction.confidence ? (prediction.confidence * 100) : 0;
@@ -574,16 +573,16 @@
         // Renderizar archivos de señales cargados
         function renderSensorFiles() {
             const container = document.getElementById('sensorFilesContainer');
-            const noFilesMsg = document.getElementById('noFilesMsg');
             
             if (sensorFiles.length === 0) {
-                noFilesMsg.style.display = 'block';
-                container.innerHTML = noFilesMsg.outerHTML;
+                container.innerHTML = `
+                    <div class="text-center text-muted py-3">
+                        No hay archivos cargados
+                    </div>
+                `;
                 document.getElementById('processSensorFilesBtn').disabled = true;
                 return;
             }
-            
-            noFilesMsg.style.display = 'none';
             
             let html = '';
             sensorFiles.forEach((file, index) => {
@@ -603,12 +602,6 @@
                             </div>
                         </div>
                         <div class="sensor-preview text-muted">${previewLines}...</div>
-                        <div class="mt-2">
-                            <label class="form-label">Tiempo de anomalía (opcional):</label>
-                            <input type="number" class="form-control form-control-sm anomaly-time" 
-                                   data-index="${index}" step="0.0001" placeholder="Ej: 41.0562">
-                            <div class="form-text">Deje en blanco si no hay anomalía conocida.</div>
-                        </div>
                     </div>
                 `;
             });
@@ -802,9 +795,9 @@
             discharge.files.forEach((file, fileIndex) => {
                 html += `
                     <div class="discharge-file-item list-group-item">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>${file.name}</div>
-                            <div class="btn-group btn-group-sm">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <div class="text-truncate me-3">${file.name}</div>
+                            <div class="btn-group btn-group-sm ms-auto">
                                 <button class="btn btn-sm btn-outline-secondary preview-file-btn" 
                                         data-discharge-id="${discharge.id}" 
                                         data-file-index="${fileIndex}">
@@ -946,7 +939,7 @@
         }
 
         // Procesar los archivos de señales para crear el formato JSON adecuado
-        function processSensorFiles(files, anomalyTimes) {
+        function processSensorFiles(files) {
             try {
                 // Agrupar archivos por descarga (extraer ID de descarga del nombre)
                 const dischargeGroups = {};
@@ -964,18 +957,12 @@
                         dischargeGroups[dischargeId] = {
                             id: dischargeId,
                             files: [],
-                            commonTimes: null,
-                            anomalyTime: null
+                            commonTimes: null
                         };
                     }
                     
                     // Añadir archivo al grupo
                     dischargeGroups[dischargeId].files.push(file);
-                    
-                    // Si hay tiempo de anomalía para este archivo, asignarlo al grupo
-                    if (anomalyTimes[file.name]) {
-                        dischargeGroups[dischargeId].anomalyTime = anomalyTimes[file.name];
-                    }
                 });
                 
                 // Construir formato de descargas
@@ -1009,11 +996,6 @@
                         id: group.id,
                         signals: []
                     };
-                    
-                    // Añadir tiempo de anomalía si existe
-                    if (group.anomalyTime !== null) {
-                        discharge.anomalyTime = group.anomalyTime;
-                    }
                     
                     // Si todos tienen los mismos tiempos, añadirlos a nivel de descarga
                     if (allSameTime && firstFileTimes && firstFileTimes.length > 0) {
@@ -1355,18 +1337,7 @@
             
             document.getElementById('processSensorFilesBtn').addEventListener('click', function() {
                 try {
-                    const anomalyTimes = {};
-                    
-                    document.querySelectorAll('#sensorFilesContainer .anomaly-time').forEach(input => {
-                        const index = parseInt(input.dataset.index);
-                        const value = input.value.trim();
-                        
-                        if (value && !isNaN(parseFloat(value))) {
-                            anomalyTimes[sensorFiles[index].name] = parseFloat(value);
-                        }
-                    });
-                    
-                    const processedData = processSensorFiles(sensorFiles, anomalyTimes);
+                    const processedData = processSensorFiles(sensorFiles);
                     
                     socket.emit('run-prediction', processedData);
                     
@@ -1665,8 +1636,21 @@
                 `;
             } else {
                 resultContainer.className = 'alert alert-success';
-                resultContainer.innerHTML = `
-                    <h5>Clase detectada: ${result.voting.decision}</h5>
+                if (result.voting.decision === 1) {
+                    resultContainer.innerHTML = `
+                        <h5>Clase detectada: ANOMALÍA</h5>
+                    `;
+                } else if (result.voting.decision === 0) {
+                    resultContainer.innerHTML = `
+                        <h5>Clase detectada: NORMAL</h5>
+                    `;
+                } else {
+                    resultContainer.innerHTML = `
+                        <h5>Clase detectada: DESCONOCIDA</h5>
+                    `;
+                } 
+
+                resultContainer.innerHTML += `
                     <p>Confianza: ${(result.voting.confidence * 100).toFixed(1)}%</p>
                     <p>${result.voting.message}</p>
                 `;
