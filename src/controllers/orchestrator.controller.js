@@ -140,7 +140,8 @@ class OrchestratorController {
           name: modelName,
           enabled: config.models[modelName].enabled,
           url: config.models[modelName].url,
-          trainingUrl: config.models[modelName].trainingUrl
+          trainingUrl: config.models[modelName].trainingUrl,
+          healthUrl: config.models[modelName].healthUrl
         })),
         timeout: config.timeouts.model
       };
@@ -186,7 +187,8 @@ class OrchestratorController {
           name: model,
           enabled: config.models[model].enabled,
           url: config.models[model].url,
-          trainingUrl: config.models[model].trainingUrl
+          trainingUrl: config.models[model].trainingUrl,
+          healthUrl: config.models[model].healthUrl
         }))
       });
     } catch (error) {
@@ -219,9 +221,9 @@ class OrchestratorController {
       }
       
       // Validar el tipo
-      if (type && !['predict', 'train'].includes(type)) {
+      if (type && !['predict', 'train', 'health'].includes(type)) {
         return res.status(StatusCodes.BAD_REQUEST).json({
-          error: "El tipo debe ser 'predict' o 'train'"
+          error: "El tipo debe ser 'predict', 'train' o 'health'"
         });
       }
       
@@ -236,7 +238,8 @@ class OrchestratorController {
           name: model,
           enabled: config.models[model].enabled,
           url: config.models[model].url,
-          trainingUrl: config.models[model].trainingUrl
+          trainingUrl: config.models[model].trainingUrl,
+          healthUrl: config.models[model].healthUrl
         }))
       });
     } catch (error) {
