@@ -6,17 +6,20 @@ let persistentConfig = {
     svm: {
       url: process.env.SVM_MODEL_URL || 'http://localhost:8001/predict',
       enabled: true,
-      trainingUrl: process.env.SVM_TRAINING_URL || 'http://localhost:8001/train'
+      trainingUrl: process.env.SVM_TRAINING_URL || 'http://localhost:8001/train',
+      healthUrl: process.env.SVM_HEALTHCHECK_URL || 'http://localhost:8001/health'
     },
     lstm: {
       url: process.env.LSTM_MODEL_URL || 'http://localhost:8002/predict',
       enabled: true,
-      trainingUrl: process.env.LSTM_TRAINING_URL || 'http://localhost:8002/train'
+      trainingUrl: process.env.LSTM_TRAINING_URL || 'http://localhost:8002/train',
+      healthUrl: process.env.LSTM_HEALTHCHECK_URL || 'http://localhost:8002/health'
     },
     xgboost: {
       url: process.env.XGBOOST_MODEL_URL || 'http://localhost:8003/predict',
       enabled: true,
-      trainingUrl: process.env.XGBOOST_TRAINING_URL || 'http://localhost:8003/train'
+      trainingUrl: process.env.XGBOOST_TRAINING_URL || 'http://localhost:8003/train',
+      healthUrl: process.env.XGBOOST_HEALTHCHECK_URL || 'http://localhost:8003/health'
     }
   }
 };
@@ -41,7 +44,9 @@ module.exports = {
       persistentConfig.models[modelName].url = url;
     } else if (type === 'train') {
       persistentConfig.models[modelName].trainingUrl = url;
-    }
+    } else if (type === 'health') {
+      persistentConfig.models[modelName].healthUrl = url;
+    } 
   },
   
   // Request timeouts

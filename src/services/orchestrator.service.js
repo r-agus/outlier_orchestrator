@@ -283,13 +283,9 @@ class OrchestratorService {
       }
       
       try {
-        // Extraer la URL base sin el endpoint /predict
-        const baseUrl = modelConfig.url.split('/predict')[0];
-        const healthUrl = `${baseUrl}/health`;
-        
         const response = await axios({
           method: 'get',
-          url: healthUrl,
+          url: modelConfig.healthUrl,
           timeout: this.timeout
         });
         

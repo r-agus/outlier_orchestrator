@@ -24,7 +24,7 @@ module.exports = function(io) {
     }
   }
 
-  // Monitorear el estado de los modelos cada 30 segundos
+  // Monitorear el estado de los modelos periodicamente
   const healthCheckInterval = setInterval(async () => {
     try {
       const health = await orchestratorService.healthCheck();
@@ -40,7 +40,7 @@ module.exports = function(io) {
     } catch (error) {
       logger.error(`Error en health check programado: ${error.message}`);
     }
-  }, 30000);
+  }, (process.env.HEALTHCHECK_TIMEOUT || 500));
 
   // Gestionar conexiones de clientes
   io.on('connection', (socket) => {
