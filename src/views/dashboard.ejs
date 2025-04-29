@@ -324,7 +324,13 @@
                                     <!-- Opción de archivos de texto para entrenamiento -->
                                     <div class="tab-pane fade show active" id="training-text-files-content" role="tabpanel" aria-labelledby="training-text-files-tab">
                                         <div class="mb-3">
-                                            <div class="d-flex justify-content-end mb-3">
+                                            <div class="d-flex justify-content-between mb-3">
+                                                <div>
+                                                    <input type="file" class="form-control" id="disruptionTimesFile" accept=".txt" style="display: inline-block; width: auto;">
+                                                    <button id="loadDisruptionTimesBtn" class="btn btn-outline-info ms-2">
+                                                        Cargar tiempos de disrupción
+                                                    </button>
+                                                </div>
                                                 <button id="addDischargeBtn" class="btn btn-outline-primary">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                                                         <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
@@ -345,9 +351,18 @@
                                             <div class="card">
                                                 <div class="card-header d-flex justify-content-between align-items-center">
                                                     <span>Vista previa del JSON</span>
-                                                    <button class="btn btn-sm btn-outline-secondary" id="togglePreviewBtn">
-                                                        Mostrar/Ocultar
-                                                    </button>
+                                                    <div>
+                                                        <button class="btn btn-sm btn-outline-success me-2" id="downloadJsonBtn">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                                                            </svg>
+                                                            Descargar JSON
+                                                        </button>
+                                                        <button class="btn btn-sm btn-outline-secondary" id="togglePreviewBtn">
+                                                            Mostrar/Ocultar
+                                                        </button>
+                                                    </div>
                                                 </div>
                                                 <div class="card-body" id="jsonPreviewContainer" style="display: none;">
                                                     <div class="alert alert-info mb-3">
@@ -1308,6 +1323,59 @@
             filePreviewModal.show();
         }
 
+        // Función para parsear archivo de tiempos de disrupción
+        function parseDisruptionTimesFile(content) {
+            const lines = content.trim().split('\n');
+            const disruptions = {};
+            
+            lines.forEach(line => {
+                const parts = line.trim().split(/\s+/);
+                if (parts.length >= 2) {
+                    const dischargeId = parts[0].trim();
+                    const anomalyTime = parseFloat(parts[1].trim());
+                    
+                    // Solo guardamos los tiempos que no son 0 (disruptivos)
+                    if (!isNaN(anomalyTime) && anomalyTime > 0) {
+                        disruptions[dischargeId] = anomalyTime;
+                    }
+                }
+            });
+            
+            return disruptions;
+        }
+
+        // Aplicar tiempos de disrupción a las descargas
+        function applyDisruptionTimesToDischarges(disruptions) {
+            let appliedCount = 0;
+            
+            discharges.forEach(discharge => {
+                if (discharge.files.length === 0) return;
+                
+                // Intentar extraer el ID de descarga del primer archivo
+                const firstFileName = discharge.files[0].name;
+                const match = firstFileName.match(/DES_(\d+)/i);
+                
+                if (match && match[1]) {
+                    const dischargeId = match[1];
+                    
+                    // Si hay un tiempo de disrupción para este ID, aplicarlo
+                    if (disruptions[dischargeId]) {
+                        discharge.anomalyTime = disruptions[dischargeId];
+                        
+                        // Actualizar el input en la UI
+                        const inputElem = document.querySelector(`.anomaly-time-input[data-discharge-id="${discharge.id}"]`);
+                        if (inputElem) {
+                            inputElem.value = disruptions[dischargeId];
+                        }
+                        
+                        appliedCount++;
+                    }
+                }
+            });
+            
+            return appliedCount;
+        }
+
         // Cuando se carga el DOM
         document.addEventListener('DOMContentLoaded', function() {
             predictionDetailsModal = new bootstrap.Modal(document.getElementById('predictionDetailsModal'));
@@ -1316,6 +1384,49 @@
             
             document.getElementById('refreshBtn').addEventListener('click', function() {
                 socket.emit('request-health');
+            });
+
+            // Event listener para cargar tiempos de disrupción
+            document.getElementById('loadDisruptionTimesBtn').addEventListener('click', async function() {
+                const fileInput = document.getElementById('disruptionTimesFile');
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    alert('Por favor seleccione un archivo con los tiempos de disrupción');
+                    return;
+                }
+
+                try {
+                    const content = await readFileAsText(fileInput.files[0]);
+                    const disruptions = parseDisruptionTimesFile(content);
+                    const appliedCount = applyDisruptionTimesToDischarges(disruptions);
+                    
+                    updateJsonPreview();
+                    alert(`Se han aplicado ${appliedCount} tiempos de disrupción correctamente`);
+                } catch (error) {
+                    alert('Error al procesar el archivo de tiempos de disrupción: ' + error.message);
+                }
+            });
+
+            // Event listener para descargar JSON
+            document.getElementById('downloadJsonBtn').addEventListener('click', function() {
+                try {
+                    const trainingData = processDischargesForTraining();
+                    
+                    // Crear archivo para descargar
+                    const dataStr = JSON.stringify(trainingData, null, 2);
+                    const blob = new Blob([dataStr], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    // Crear enlace de descarga y ejecutarlo
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = url;
+                    downloadLink.download = 'training_data.json';
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                    URL.revokeObjectURL(url);
+                } catch (error) {
+                    alert('Error al generar el archivo JSON: ' + error.message);
+                }
             });
 
             document.getElementById('sensorFilesInput').addEventListener('change', async function(e) {
