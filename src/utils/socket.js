@@ -40,7 +40,7 @@ module.exports = function(io) {
     } catch (error) {
       logger.error(`Error en health check programado: ${error.message}`);
     }
-  }, (process.env.HEALTHCHECK_TIMEOUT || 500));
+  }, (process.env.HEALTHCHECK_TIMEOUT || 5000));
 
   // Gestionar conexiones de clientes
   io.on('connection', (socket) => {
@@ -84,11 +84,10 @@ module.exports = function(io) {
         
         addPrediction(predictionRecord);
         io.emit('new-prediction', predictionRecord);
-        
         socket.emit('prediction-result', result);
       } catch (error) {
         logger.error(`Error en predicción manual: ${error.message}`);
-        socket.emit('error', { message: 'Error al procesar la predicción' });
+        socket.emit('error', { message: `Error al procesar la predicción: ${error.message}` });
       }
     });
     
@@ -115,10 +114,20 @@ module.exports = function(io) {
       }
     });
     
-    // Manejar desconexiones
-    socket.on('disconnect', () => {
-      logger.info(`Cliente desconectado: ${socket.id}`);
+    // Manejar errores de socket para evitar desconexiones
+    socket.on('error', (error) => {
+      logger.error(`Error de socket para cliente ${socket.id}: ${error.message}`);
     });
+    
+    // Manejar desconexiones
+    socket.on('disconnect', (reason) => {
+      logger.info(`Cliente desconectado: ${socket.id}, razón: ${reason}`);
+    });
+  });
+
+  // Agregar manejo de errores a nivel del servidor socket.io
+  io.engine.on('connection_error', (err) => {
+    logger.error(`Error de conexión Socket.IO: ${err.message}`);
   });
 
   // Limpiar intervalo al detener el servidor
