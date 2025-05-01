@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Control - Sistema de Clasificación</title>
+    <title>Control Panel - Discharge classification system</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -172,7 +172,7 @@
     <div class="container">
         <header class="pb-3 mb-4 border-bottom">
             <div class="d-flex justify-content-between align-items-center">
-                <h1 class="fw-bold">Sistema de Detección de Anomalías</h1>
+                <h1 class="fw-bold">Anomaly detection system</h1>
                 <div>
                     <button id="refreshBtn" class="btn btn-sm btn-outline-secondary">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
@@ -196,11 +196,11 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-primary text-white">
-                        Estado de los Modelos
+                        Model Status
                     </div>
                     <div class="card-body">
                         <div class="models-row" id="modelsContainer">
-                            <!-- Los modelos se agregarán dinámicamente aquí -->
+                            <!-- Models will be added dynamically here -->
                         </div>
                     </div>
                 </div>
@@ -211,35 +211,35 @@
             <div class="col-12">
                 <ul class="nav nav-tabs" id="dataTabs" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="prediction-tab" data-bs-toggle="tab" data-bs-target="#prediction" type="button" role="tab" aria-controls="prediction" aria-selected="true">Predicción</button>
+                        <button class="nav-link active" id="prediction-tab" data-bs-toggle="tab" data-bs-target="#prediction" type="button" role="tab" aria-controls="prediction" aria-selected="true">Prediction</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="training-tab" data-bs-toggle="tab" data-bs-target="#training" type="button" role="tab" aria-controls="training" aria-selected="false">Entrenamiento</button>
+                        <button class="nav-link" id="training-tab" data-bs-toggle="tab" data-bs-target="#training" type="button" role="tab" aria-controls="training" aria-selected="false">Training</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false">Historial</button>
+                        <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false">History</button>
                     </li>
                 </ul>
             </div>
         </div>
 
         <div class="tab-content">
-            <!-- Tab de Predicción -->
+            <!-- Prediction Tab -->
             <div class="tab-pane fade show active" id="prediction" role="tabpanel" aria-labelledby="prediction-tab">
                 <div class="row">
                     <div class="col-md-12 mb-4">
                         <div class="card">
                             <div class="card-header bg-primary text-white">
-                                Predicción
+                                Prediction
                             </div>
                             <div class="card-body">
                                 <div class="alert alert-info mb-3">
-                                    <strong>Información:</strong> Puede cargar múltiples archivos de texto (.txt) que contienen datos de señales o utilizar el formato JSON directamente.
+                                    <strong>Information:</strong> You can upload multiple text files (.txt) containing signal data or use the JSON format directly.
                                 </div>
-                                
+
                                 <ul class="nav nav-pills mb-3" id="predictionOptions" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="text-files-tab" data-bs-toggle="pill" data-bs-target="#text-files-content" type="button" role="tab" aria-controls="text-files-content" aria-selected="true">Archivos de Texto</button>
+                                        <button class="nav-link active" id="text-files-tab" data-bs-toggle="pill" data-bs-target="#text-files-content" type="button" role="tab" aria-controls="text-files-content" aria-selected="true">Text files</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link" id="json-input-tab" data-bs-toggle="pill" data-bs-target="#json-input-content" type="button" role="tab" aria-controls="json-input-content" aria-selected="false">JSON</button>
@@ -247,49 +247,49 @@
                                 </ul>
                                 
                                 <div class="tab-content" id="predictionOptionsContent">
-                                    <!-- Opción de archivos de texto -->
+                                    <!-- Text File Option -->
                                     <div class="tab-pane fade show active" id="text-files-content" role="tabpanel" aria-labelledby="text-files-tab">
                                         <div class="mb-3">
-                                            <label class="form-label">Archivos de señales (.txt)</label>
-                                            <input type="file" class="form-control" id="sensorFilesInput" multiple accept=".txt">
-                                            <div class="form-text">Seleccione los archivos de texto con los datos de las señales (un archivo por sensor).</div>
+                                            <label for="sensorFilesInput" class="form-label">Signal Files (.txt)</label>
+                                            <input type="file" class="form-control" id="sensorFilesInput" multiple accept=".txt" aria-describedby="sensorFilesHelp">
+                                            <div id="sensorFilesHelp" class="form-text">Select the text files containing the signal data (one file per signal).</div>
                                         </div>
                                         
                                         <div class="sensor-files-container mb-3" id="sensorFilesContainer">
                                             <div class="text-center text-muted py-3" id="noFilesMsg">
-                                                No hay archivos cargados
+                                                No files uploaded
                                             </div>
-                                            <!-- Los archivos de señales se mostrarán aquí -->
+                                            <!-- Signal files will be displayed here -->
                                         </div>
                                         
                                         <div class="d-grid">
-                                            <button id="processSensorFilesBtn" class="btn btn-primary" disabled>Procesar y Realizar Predicción</button>
+                                            <button id="processSensorFilesBtn" class="btn btn-primary" disabled>Process and Make Prediction</button>
                                         </div>
                                     </div>
                                     
-                                    <!-- Opción de entrada JSON -->
+                                    <!-- JSON option -->
                                     <div class="tab-pane fade" id="json-input-content" role="tabpanel" aria-labelledby="json-input-tab">
                                         <div class="mb-3">
-                                            <label class="form-label">Cargar JSON</label>
+                                            <label for="predictionFile" class="form-label">Upload JSON</label>
                                             <div class="d-flex">
-                                                <input type="file" class="form-control" id="predictionFile" accept=".json">
-                                                <button id="loadPredictionSampleBtn" class="btn btn-outline-secondary ms-2">Cargar ejemplo</button>
+                                                <input type="file" class="form-control" id="predictionFile" accept=".json" aria-describedby="predictionFileHelp">
                                             </div>
+                                            <div id="predictionFileHelp" class="form-text">Select a JSON file containing prediction data.</div>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="testDataTextarea" class="form-label">Datos (formato JSON)</label>
+                                            <label for="testDataTextarea" class="form-label">Data (JSON format)</label>
                                             <textarea class="form-control" id="testDataTextarea" rows="8" placeholder='{ "signals": [{ "fileName": "sensor1.txt", "times": [41.052, 41.054, ...], "values": [-759337, -760461, ...], "length": 5, "anomalyTime": null }] }'></textarea>
                                         </div>
                                         <div class="d-grid">
-                                            <button id="testPredictionBtn" class="btn btn-primary">Realizar Predicción</button>
+                                            <button id="testPredictionBtn" class="btn btn-primary">Predict</button>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div id="predictionResultContainer" class="mt-3" style="display: none;">
-                                    <h5>Resultado:</h5>
+                                    <h5>Result:</h5>
                                     <div class="alert" id="predictionResult">
-                                        <!-- Resultados de predicción -->
+                                        <!-- Predict results -->
                                     </div>
                                 </div>
                             </div>
@@ -298,22 +298,22 @@
                 </div>
             </div>
 
-            <!-- Tab de Entrenamiento -->
+            <!-- Training Tab -->
             <div class="tab-pane fade" id="training" role="tabpanel" aria-labelledby="training-tab">
                 <div class="row">
                     <div class="col-md-12 mb-4">
                         <div class="card">
                             <div class="card-header bg-primary text-white">
-                                Entrenamiento
+                                Training
                             </div>
                             <div class="card-body">
                                 <div class="alert alert-warning mb-3">
-                                    <strong>Importante:</strong> El entrenamiento enviará datos a todos los modelos habilitados. Cada modelo realizará su propio preprocesamiento.
+                                    <strong>Important:</strong> The training will send data to all enabled models. Each model will perform its own preprocessing.
                                 </div>
                                 
                                 <ul class="nav nav-pills mb-3" id="trainingOptions" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="training-text-files-tab" data-bs-toggle="pill" data-bs-target="#training-text-files-content" type="button" role="tab" aria-controls="training-text-files-content" aria-selected="true">Archivos de Texto</button>
+                                        <button class="nav-link active" id="training-text-files-tab" data-bs-toggle="pill" data-bs-target="#training-text-files-content" type="button" role="tab" aria-controls="training-text-files-content" aria-selected="true">Text files</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link" id="training-json-input-tab" data-bs-toggle="pill" data-bs-target="#training-json-input-content" type="button" role="tab" aria-controls="training-json-input-content" aria-selected="false">JSON</button>
@@ -321,52 +321,52 @@
                                 </ul>
                                 
                                 <div class="tab-content" id="trainingOptionsContent">
-                                    <!-- Opción de archivos de texto para entrenamiento -->
+                                    <!-- Text file option for training -->
                                     <div class="tab-pane fade show active" id="training-text-files-content" role="tabpanel" aria-labelledby="training-text-files-tab">
                                         <div class="mb-3">
                                             <div class="d-flex justify-content-between mb-3">
                                                 <div>
                                                     <input type="file" class="form-control" id="disruptionTimesFile" accept=".txt" style="display: inline-block; width: auto;">
                                                     <button id="loadDisruptionTimesBtn" class="btn btn-outline-info ms-2">
-                                                        Cargar tiempos de disrupción
+                                                        Load disruption times
                                                     </button>
                                                 </div>
                                                 <button id="addDischargeBtn" class="btn btn-outline-primary">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                                                         <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
                                                     </svg>
-                                                    Añadir descarga
+                                                    Add discharge
                                                 </button>
                                             </div>
                                         </div>
                                         
                                         <div class="discharges-container mb-3" id="dischargesContainer">
                                             <div class="text-center text-muted py-3" id="noDischargesMsg">
-                                                No hay descargas añadidas
+                                                No discharges added
                                             </div>
-                                            <!-- Las descargas se mostrarán aquí -->
+                                            <!-- Discharges will be displayed here -->
                                         </div>
                                         
                                         <div class="mb-3">
                                             <div class="card">
                                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                                    <span>Vista previa del JSON</span>
+                                                    <span>JSON Preview</span>
                                                     <div>
                                                         <button class="btn btn-sm btn-outline-success me-2" id="downloadJsonBtn">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
                                                                 <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
                                                                 <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
                                                             </svg>
-                                                            Descargar JSON
+                                                            Download JSON
                                                         </button>
                                                         <button class="btn btn-sm btn-outline-secondary" id="togglePreviewBtn">
-                                                            Mostrar/Ocultar
+                                                            Show/Hide Preview
                                                         </button>
                                                     </div>
                                                 </div>
                                                 <div class="card-body" id="jsonPreviewContainer" style="display: none;">
                                                     <div class="alert alert-info mb-3">
-                                                        <strong>Nota:</strong> Esta es una vista simplificada. Solo se muestran las primeras líneas de cada archivo para mayor claridad.
+                                                        <strong>Note:</strong> This is a simplified view. Only the first lines of each file are shown for clarity.
                                                     </div>
                                                     <pre id="jsonPreview" class="bg-light p-3 rounded" style="max-height: 200px; overflow: auto; font-size: 12px;"></pre>
                                                 </div>
@@ -374,33 +374,32 @@
                                         </div>
                                         
                                         <div class="d-grid">
-                                            <button id="processDischargesBtn" class="btn btn-warning" disabled>Procesar e Iniciar Entrenamiento</button>
+                                            <button id="processDischargesBtn" class="btn btn-warning" disabled>Process and Start Training</button>
                                         </div>
                                     </div>
                                     
-                                    <!-- Opción de entrada JSON para entrenamiento -->
+                                    <!-- JSON input option for training -->
                                     <div class="tab-pane fade" id="training-json-input-content" role="tabpanel" aria-labelledby="training-json-input-tab">
                                         <div class="mb-3">
-                                            <label class="form-label">Cargar JSON</label>
+                                            <label class="form-label">Upload JSON</label>
                                             <div class="d-flex">
                                                 <input type="file" class="form-control" id="trainingFile" accept=".json">
-                                                <button id="loadTrainingSampleBtn" class="btn btn-outline-secondary ms-2">Cargar ejemplo</button>
                                             </div>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="trainingDataTextarea" class="form-label">Datos (formato JSON)</label>
+                                            <label for="trainingDataTextarea" class="form-label">Data (JSON format)</label>
                                             <textarea class="form-control" id="trainingDataTextarea" rows="8" placeholder='{ "signals": [{ "fileName": "sensor1.txt", "times": [41.052, 41.054, ...], "values": [-759337, -760461, ...], "length": 5, "anomalyTime": 41.056 }] }'></textarea>
                                         </div>
                                         <div class="d-grid">
-                                            <button id="startTrainingBtn" class="btn btn-warning">Iniciar Entrenamiento</button>
+                                            <button id="startTrainingBtn" class="btn btn-warning">Start Training</button>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div id="trainingResultContainer" class="mt-3" style="display: none;">
-                                    <h5>Resultado:</h5>
+                                    <h5>Result:</h5>
                                     <div class="alert" id="trainingResult">
-                                        <!-- Resultados de entrenamiento -->
+                                        <!-- Training results -->
                                     </div>
                                 </div>
                             </div>
@@ -415,13 +414,13 @@
                     <div class="col-md-12 mb-4">
                         <div class="card">
                             <div class="card-header bg-primary text-white">
-                                Historial de Predicciones
+                                Prediction History
                             </div>
                             <div class="card-body">
                                 <div id="predictionHistory" class="overflow-auto" style="max-height: 400px;">
-                                    <!-- El historial se agregará dinámicamente aquí -->
+                                    <!-- The history will be added dynamically here -->
                                     <div class="text-center text-muted" id="noPredictionsMsg">
-                                        No hay predicciones registradas
+                                        No predictions recorded
                                     </div>
                                 </div>
                             </div>
@@ -432,12 +431,12 @@
         </div>
     </div>
 
-    <!-- Modal para mostrar detalles de predicción -->
+    <!-- Prediction details modal -->
     <div class="modal fade" id="predictionDetailsModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Detalles de Predicción</h5>
+                    <h5 class="modal-title">Prediction Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -447,20 +446,20 @@
         </div>
     </div>
 
-    <!-- Modal para configuración de URLs -->
+    <!-- URLs configuration modal -->
     <div class="modal fade" id="configModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Configuración de Modelos</h5>
+                    <h5 class="modal-title">Model Configuration</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div id="modelConfigContainer">
-                        <!-- La configuración de modelos se cargará aquí dinámicamente -->
+                        <!-- Model configuration will be loaded here dynamically -->
                         <div class="text-center">
                             <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Cargando...</span>
+                                <span class="visually-hidden">Loading...</span>
                             </div>
                         </div>
                     </div>
@@ -469,12 +468,12 @@
         </div>
     </div>
 
-    <!-- Modal para mostrar vista previa de archivo -->
+    <!-- File preview modal -->
     <div class="modal fade" id="filePreviewModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="filePreviewTitle">Vista Previa</h5>
+                    <h5 class="modal-title" id="filePreviewTitle">File Preview</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -487,26 +486,24 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        // Conectar con el servidor Socket.io
+        // Connect to the Socket.io server
         const socket = io();
         let predictionHistory = [];
         let predictionDetailsModal;
         let configModal;
         let filePreviewModal;
 
-        // Gestión de archivos de señales para predicción
+        // Manage signal files for prediction
         let sensorFiles = [];
-        // Array de descargas de entrenamiendo. Cada descarga tiene: id, files[], anomalyTime
+        // Array of training downloads. Each download has: id, files[], anomalyTime
         let discharges = [];
         let dischargeCounter = 0;
 
-        // Función para formatear la fecha
         function formatDate(date) {
             const d = new Date(date);
             return d.toLocaleString();
         }
 
-        // Renderizar un modelo
         function renderModel(name, status) {
             const statusClass = {
                 'online': 'status-online',
@@ -522,7 +519,7 @@
                 'unknown': 'Desconocido'
             }[status.status] || 'Desconocido';
 
-            const lastCheck = status.lastCheck ? formatDate(status.lastCheck) : 'Nunca';
+            const lastCheck = status.lastCheck ? formatDate(status.lastCheck) : 'Never';
 
             return `
                 <div class="model-col">
@@ -531,14 +528,14 @@
                             <h5 class="card-title">${name.toUpperCase()}</h5>
                             <p class="model-status ${statusClass}">${statusText}</p>
                             <p class="card-text">
-                                <small class="text-muted">Última verificación: ${lastCheck}</small>
+                                <small class="text-muted">Last check: ${lastCheck}</small>
                             </p>
                             <div class="form-check form-switch">
                                 <input class="form-check-input model-toggle" type="checkbox" 
                                     id="toggle-${name}" 
                                     data-model="${name}" 
                                     ${status.status !== 'disabled' ? 'checked' : ''}>
-                                <label class="form-check-label" for="toggle-${name}">Habilitado</label>
+                                <label class="form-check-label" for="toggle-${name}">Enabled</label>
                             </div>
                         </div>
                     </div>
@@ -546,13 +543,13 @@
             `;
         }
 
-        // Renderizar historial de predicciones
+        // Render prediction history
         function renderPredictionHistory() {
             if (predictionHistory.length === 0) {
                 document.getElementById('noPredictionsMsg').style.display = 'block';
                 document.getElementById('predictionHistory').innerHTML = `
                     <div class="text-center text-muted" id="noPredictionsMsg">
-                        No hay predicciones registradas
+                        No predictions recorded
                     </div>`;
                 return;
             }
@@ -566,7 +563,7 @@
                          data-index="${index}" 
                          onclick="showPredictionDetails(${index})">
                         <div class="d-flex justify-content-between">
-                            <strong>Clase: ${predClass !== 'undefined' ? predClass : 'No determinada'}</strong>
+                            <strong>Clase: ${predClass !== 'undefined' ? predClass : 'Undefined'}</strong>
                             <span class="timestamp">${formatDate(prediction.timestamp)}</span>
                         </div>
                         
@@ -585,14 +582,13 @@
             document.getElementById('predictionHistory').innerHTML = historyHtml;
         }
 
-        // Renderizar archivos de señales cargados
         function renderSensorFiles() {
             const container = document.getElementById('sensorFilesContainer');
             
             if (sensorFiles.length === 0) {
                 container.innerHTML = `
                     <div class="text-center text-muted py-3">
-                        No hay archivos cargados
+                        No sensor files loaded
                     </div>
                 `;
                 document.getElementById('processSensorFilesBtn').disabled = true;
@@ -609,10 +605,10 @@
                             <h6>${file.name}</h6>
                             <div class="btn-group btn-group-sm">
                                 <button class="btn btn-outline-secondary btn-preview" data-index="${index}">
-                                    Vista previa
+                                    Preview
                                 </button>
                                 <button class="btn btn-outline-danger btn-remove" data-index="${index}">
-                                    Eliminar
+                                    Delete
                                 </button>
                             </div>
                         </div>
@@ -640,7 +636,7 @@
             });
         }
 
-        // Función para añadir una nueva descarga
+        // Function to add a new discharge
         function addDischarge() {
             const dischargeId = dischargeCounter++;
             const discharge = {
@@ -654,7 +650,7 @@
             return dischargeId;
         }
 
-        // Función para eliminar una descarga
+        // Function to remove a discharge
         function removeDischarge(dischargeId) {
             const index = discharges.findIndex(d => d.id === dischargeId);
             if (index !== -1) {
@@ -664,22 +660,21 @@
             }
         }
 
-        // Función para renderizar todas las descargas
         function renderDischarges() {
             const container = document.getElementById('dischargesContainer');
             
-            // Si no hay descargas, mostrar mensaje y desactivar botón
+            // If there are no discharges, show a message and disable the button
             if (discharges.length === 0) {
                 container.innerHTML = `
                     <div class="text-center text-muted py-3" id="noDischargesMsg">
-                        No hay descargas añadidas
+                        No discharges added
                     </div>
                 `;
                 document.getElementById('processDischargesBtn').disabled = true;
                 return;
             }
             
-            // Si hay descargas, habilitar botón
+            // If there are discharges, enable button
             document.getElementById('processDischargesBtn').disabled = false;
             
             let html = '';
@@ -689,33 +684,33 @@
                 html += `
                     <div class="discharge-item" id="discharge-${discharge.id}">
                         <div class="discharge-header">
-                            <h5>Descarga #${discharge.id + 1}</h5>
+                            <h5>Discharge #${discharge.id + 1}</h5>
                             <div class="btn-group btn-group-sm">
                                 <button class="btn btn-outline-danger remove-discharge-btn" data-discharge-id="${discharge.id}">
-                                    Eliminar descarga
+                                    Remove Discharge
                                 </button>
                             </div>
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">Archivos de señales (.txt):</label>
+                            <label class="form-label">Signal files (.txt):</label>
                             <input type="file" class="form-control discharge-files-input" 
                                     multiple accept=".txt" data-discharge-id="${discharge.id}">
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">Tiempo de anomalía (común para todos los archivos):</label>
+                            <label class="form-label">Anomaly time (for all files):</label>
                             <input type="number" class="form-control anomaly-time-input" 
                                    step="0.0001" placeholder="Ej: 41.0562" data-discharge-id="${discharge.id}"
                                    value="${discharge.anomalyTime !== null ? discharge.anomalyTime : ''}">
                             <div class="form-text">
-                                Este tiempo se aplicará a todos los archivos de esta descarga.
-                                Puede dejarse en blanco si no hay anomalía conocida.
+                                This time will be applied to all files in this download.
+                                It can be left blank if there is no known anomaly.
                             </div>
                         </div>
                         
                         <div class="discharge-files-section mt-4">
-                            <h6>Archivos (${filesCount})</h6>
+                            <h6>Files (${filesCount})</h6>
                             <div class="discharge-files list-group">
                                 ${renderDischargeFiles(discharge)}
                             </div>
@@ -726,7 +721,7 @@
             
             container.innerHTML = html;
             
-            // Añadir event listeners a los nuevos elementos
+            // Add event listeners to the new elements
             container.querySelectorAll('.remove-discharge-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const dischargeId = parseInt(this.getAttribute('data-discharge-id'));
@@ -748,13 +743,13 @@
                                     content
                                 });
                             } catch (error) {
-                                alert(`Error al leer el archivo ${file.name}: ${error.message}`);
+                                alert(`Error at reading file ${file.name}: ${error.message}`);
                             }
                         }
                         
                         renderDischarges();
                         updateJsonPreview();
-                        e.target.value = ''; // Resetear el input para permitir cargar los mismos archivos nuevamente
+                        e.target.value = ''; // Reset the input to allow loading the same files again
                     }
                 });
             });
@@ -800,10 +795,10 @@
             });
         }
 
-        // Renderizar los archivos de una descarga específica
+        // Render specific discharge files
         function renderDischargeFiles(discharge) {
             if (discharge.files.length === 0) {
-                return '<div class="text-center text-muted py-3">No hay archivos añadidos</div>';
+                return '<div class="text-center text-muted py-3">No files added</div>';
             }
             
             let html = '';
@@ -816,12 +811,12 @@
                                 <button class="btn btn-sm btn-outline-secondary preview-file-btn" 
                                         data-discharge-id="${discharge.id}" 
                                         data-file-index="${fileIndex}">
-                                    Vista previa
+                                    Preview
                                 </button>
                                 <button class="btn btn-sm btn-outline-danger remove-file-btn"
                                         data-discharge-id="${discharge.id}" 
                                         data-file-index="${fileIndex}">
-                                    Eliminar
+                                    Remove
                                 </button>
                             </div>
                         </div>
@@ -832,26 +827,25 @@
             return html;
         }
 
-        // Función para generar la vista previa del JSON
+        // Function to generate the JSON preview
         function updateJsonPreview() {
             if (discharges.length === 0) {
-                document.getElementById('jsonPreview').textContent = 'No hay datos para mostrar';
+                document.getElementById('jsonPreview').textContent = 'There is no data to show';
                 return;
             }
             
-            // Crear estructura de datos para la vista previa con formato optimizado
+            // Create data structure for the preview with optimized format
             const previewData = { discharges: [] };
             
-            // Procesar cada descarga como un descarga
+            // Process each discharge
             discharges.forEach(discharge => {
                 if (discharge.files.length === 0) {
-                    return; // Saltamos descargas sin archivos
+                    return; // Skip discharges without files
                 }
-                
-                // Extraer el identificador de descarga del nombre de archivo si es posible
+
                 let dischargeId = `discharge_${discharge.id + 1}`;
                 
-                // Intentar extraer el identificador del nombre del archivo
+                // Try to extract the identifier from the file name
                 if (discharge.files.length > 0) {
                     const fileName = discharge.files[0].name;
                     const match = fileName.match(/DES_(\d+)/i);
@@ -859,24 +853,23 @@
                         dischargeId = match[1];
                     }
                 }
-                
-                // Crear estructura para el descarga/descarga
+
                 const dischargeData = {
                     id: dischargeId,
                     signals: []
                 };
                 
-                // Añadir tiempo de anomalía si está definido
+                // Add anomaly time if defined
                 if (discharge.anomalyTime !== null) {
                     dischargeData.anomalyTime = discharge.anomalyTime;
                 }
                 
-                // Verificar si todos los archivos tienen los mismos tiempos
+                // Check if all files have the same times
                 let commonTimes = [];
                 let allSameTime = true;
                 let firstFileTimes = null;
                 
-                // Tomamos las primeras 5 líneas para la vista previa
+                // Take the first 5 lines for the preview
                 discharge.files.forEach((file, index) => {
                     const lines = file.content.trim().split('\n');
                     const previewLines = Math.min(5, lines.length);
@@ -896,17 +889,16 @@
                     }
                 });
                 
-                // Si todos tienen los mismos tiempos, los guardamos a nivel de descarga
                 if (allSameTime && firstFileTimes) {
                     dischargeData.times = firstFileTimes;
                     const totalLines = discharge.files[0].content.trim().split('\n').length;
                     dischargeData.length = totalLines;
                     if (totalLines > 5) {
-                        dischargeData._previewNote = `... se muestran 5 de ${totalLines} líneas`;
+                        dischargeData._previewNote = `... displaying 5 of ${totalLines} lines`;
                     }
                 }
                 
-                // Procesar cada archivo
+                // Process each file
                 discharge.files.forEach(file => {
                     try {
                         const lines = file.content.trim().split('\n');
@@ -936,38 +928,38 @@
                             const totalLines = file.content.trim().split('\n').length;
                             sensorData.length = totalLines;
                             if (totalLines > 5) {
-                                sensorData._previewNote = `... se muestran 5 de ${totalLines} líneas`;
+                                sensorData._previewNote = `... showing 5 of ${totalLines} lines`;
                             }
                         }
                         
                         dischargeData.signals.push(sensorData);
                     } catch (error) {
-                        console.error(`Error al procesar archivo ${file.name}:`, error);
+                        console.error(`Error processing file ${file.name}:`, error);
                     }
                 });
                 
                 previewData.discharges.push(dischargeData);
             });
             
-            // Formatear el JSON para mostrarlo
+            // Format the JSON for display
             document.getElementById('jsonPreview').textContent = JSON.stringify(previewData, null, 2);
         }
 
-        // Procesar los archivos de señales para crear el formato JSON adecuado
-        function processSensorFiles(files) {
+        // Process signal files to create the appropriate JSON format
+        function processSignalFiles(files) {
             try {
-                // Agrupar archivos por descarga (extraer ID de descarga del nombre)
+                // Group files by discharge (extract discharge ID from the file name)
                 const dischargeGroups = {};
                 
                 files.forEach(file => {
-                    // Intentar extraer ID de descarga del nombre del archivo
+                    // Attempt to extract discharge ID from the file name
                     let dischargeId = "unknown";
                     const match = file.name.match(/DES_(\d+)/i);
                     if (match && match[1]) {
                         dischargeId = match[1];
                     }
                     
-                    // Crear grupo si no existe
+                    // Create group if it doesn't exist
                     if (!dischargeGroups[dischargeId]) {
                         dischargeGroups[dischargeId] = {
                             id: dischargeId,
@@ -975,17 +967,13 @@
                             commonTimes: null
                         };
                     }
-                    
-                    // Añadir archivo al grupo
+
                     dischargeGroups[dischargeId].files.push(file);
                 });
-                
-                // Construir formato de descargas
+
                 const discharges = [];
-                
-                // Procesar cada grupo
+
                 Object.values(dischargeGroups).forEach(group => {
-                    // Verificar si todos los archivos tienen los mismos tiempos
                     let allSameTime = true;
                     let firstFileTimes = null;
                     
@@ -1011,14 +999,12 @@
                         id: group.id,
                         signals: []
                     };
-                    
-                    // Si todos tienen los mismos tiempos, añadirlos a nivel de descarga
+
                     if (allSameTime && firstFileTimes && firstFileTimes.length > 0) {
                         discharge.times = firstFileTimes;
                         discharge.length = firstFileTimes.length;
                     }
                     
-                    // Procesar cada archivo
                     group.files.forEach(file => {
                         const lines = file.content.trim().split('\n');
                         const values = [];
@@ -1039,7 +1025,7 @@
                             values: values
                         };
                         
-                        // Añadir tiempos solo si no son comunes
+                        // If times are not common, include them in the sensor data
                         if (!allSameTime) {
                             sensorData.times = times;
                             sensorData.length = times.length;
@@ -1054,33 +1040,32 @@
                 return { discharges };
                 
             } catch (error) {
-                throw new Error(`Error al procesar archivos: ${error.message}`);
+                throw new Error(`Error processing file: ${error.message}`);
             }
         }
 
-        // Procesar todas las descargas para entrenamiento
+        // Process each discharge for training
         function processDischargesForTraining() {
             try {
                 if (discharges.length === 0) {
-                    throw new Error('No hay descargas para procesar');
+                    throw new Error('No discharges to process');
                 }
                 
-                // Estructura de datos optimizada para la API
                 const trainingData = { discharges: [] };
                 
-                // Procesar cada descarga como un descarga independiente
+                // Process each discharge as an independent discharge
                 discharges.forEach(discharge => {
-                    // Verificar si hay archivos
+                    // Check if there are files
                     if (discharge.files.length === 0) {
-                        console.warn(`La descarga #${discharge.id + 1} no tiene archivos`);
+                        console.warn(`Discharge #${discharge.id + 1} has no files`);
                         return;
                     }
                     
-                    // Extraer el identificador de descarga del nombre de archivo si es posible
+                    // Extract the discharge identifier from the file name if possible
                     let dischargeId = `discharge_${discharge.id + 1}`;
                     
-                    // Intentar extraer el identificador del nombre del archivo
-                    // Formato esperado: DES_XXXXX_YY donde XXXXX es el ID de la descarga
+                    // Attempt to extract the identifier from the file name
+                    // Expected format: DES_XXXXX_YY where XXXXX is the discharge ID
                     if (discharge.files.length > 0) {
                         const fileName = discharge.files[0].name;
                         const match = fileName.match(/DES_(\d+)/i);
@@ -1094,17 +1079,15 @@
                         signals: []
                     };
                     
-                    // Añadir tiempo de anomalía si está definido
                     if (discharge.anomalyTime !== null) {
                         dischargeData.anomalyTime = discharge.anomalyTime;
                     }
                     
-                    // Procesamos todos los tiempos para verificar que son iguales en todos los archivos
                     let commonTimes = null;
                     let firstFileTimes = null;
                     let allSameTime = true;
                     
-                    // Procesar primero todos los tiempos para verificar si son comunes
+                    // Process first all times to check if they are common
                     discharge.files.forEach((file, index) => {
                         const lines = file.content.trim().split('\n');
                         const times = [];
@@ -1126,13 +1109,12 @@
                         }
                     });
                     
-                    // Si todos tienen los mismos tiempos, los guardamos a nivel de descarga
                     if (allSameTime && firstFileTimes) {
                         dischargeData.times = firstFileTimes;
                         dischargeData.length = firstFileTimes.length;
                     }
                     
-                    // Procesamos los valores de cada archivo
+                    // Process values of each file
                     discharge.files.forEach(file => {
                         try {
                             const lines = file.content.trim().split('\n');
@@ -1146,7 +1128,7 @@
                                     const value = parseFloat(parts[1]);
                                     
                                     if (!isNaN(time) && !isNaN(value)) {
-                                        // Si no tenemos tiempos comunes, guardamos los tiempos por archivo
+                                        // If we don't have common times, store the times per file
                                         if (!allSameTime) {
                                             fileTimes.push(time);
                                         }
@@ -1160,7 +1142,7 @@
                                 values: values
                             };
                             
-                            // Si no hay tiempos comunes, incluimos los tiempos específicos del archivo
+                            // If there are no common times, include the specific times of the file
                             if (!allSameTime) {
                                 sensorData.times = fileTimes;
                                 sensorData.length = fileTimes.length;
@@ -1188,7 +1170,6 @@
             }
         }
 
-        // Renderizar configuración de modelos
         function renderModelConfig(models) {
             const configContainer = document.getElementById('modelConfigContainer');
             let html = '';
@@ -1205,11 +1186,11 @@
                                     id="config-toggle-${model.name}" 
                                     data-model="${model.name}" 
                                     ${model.enabled ? 'checked' : ''}>
-                                <label class="form-check-label" for="config-toggle-${model.name}">Habilitado</label>
+                                <label class="form-check-label" for="config-toggle-${model.name}">Enabled</label>
                             </div>
                             
                             <div class="mb-3">
-                                <label class="form-label">URL de Predicción:</label>
+                                <label class="form-label">Prediction URL:</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control model-url" 
                                         data-model="${model.name}"
@@ -1217,12 +1198,12 @@
                                         value="${model.url}">
                                     <button class="btn btn-outline-primary update-url-btn" 
                                         data-model="${model.name}"
-                                        data-type="predict">Actualizar</button>
+                                        data-type="predict">Update</button>
                                 </div>
                             </div>
                             
                             <div class="mb-3">
-                                <label class="form-label">URL de Entrenamiento:</label>
+                                <label class="form-label">Training URL:</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control model-url" 
                                         data-model="${model.name}"
@@ -1230,12 +1211,12 @@
                                         value="${model.trainingUrl}">
                                     <button class="btn btn-outline-primary update-url-btn" 
                                         data-model="${model.name}"
-                                        data-type="train">Actualizar</button>
+                                        data-type="train">Update</button>
                                 </div>
                             </div>
                             
                             <div class="mb-3">
-                                <label class="form-label">URL de Health Check:</label>
+                                <label class="form-label">Health Check URL:</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control model-url" 
                                         data-model="${model.name}"
@@ -1243,7 +1224,7 @@
                                         value="${model.healthUrl}">
                                     <button class="btn btn-outline-primary update-url-btn" 
                                         data-model="${model.name}"
-                                        data-type="health">Actualizar</button>
+                                        data-type="health">Update</button>
                                 </div>
                             </div>
                         </div>
@@ -1287,16 +1268,14 @@
                 if (data.error) {
                     alert('Error: ' + data.error);
                 } else {
-                    alert('URL actualizada con éxito');
                     renderModelConfig(data.models);
                 }
             })
             .catch(error => {
-                alert('Error al actualizar URL: ' + error.message);
+                alert('Error at updating URL: ' + error.message);
             });
         }
 
-        // Leer archivo como texto
         function readFileAsText(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -1306,7 +1285,6 @@
             });
         }
 
-        // Mostrar detalles de predicción
         window.showPredictionDetails = function(index) {
             const prediction = predictionHistory[index];
             if (prediction) {
@@ -1316,14 +1294,13 @@
             }
         };
 
-        // Mostrar vista previa de archivo
+        // File preview. TODO: Show graph instead of text
         function showFilePreview(fileName, content) {
             document.getElementById('filePreviewTitle').textContent = fileName;
             document.getElementById('filePreviewContent').textContent = content;
             filePreviewModal.show();
         }
 
-        // Función para parsear archivo de tiempos de disrupción
         function parseDisruptionTimesFile(content) {
             const lines = content.trim().split('\n');
             const disruptions = {};
@@ -1334,7 +1311,7 @@
                     const dischargeId = parts[0].trim();
                     const anomalyTime = parseFloat(parts[1].trim());
                     
-                    // Solo guardamos los tiempos que no son 0 (disruptivos)
+                    // Only store times that are not 0 (disruptive)
                     if (!isNaN(anomalyTime) && anomalyTime > 0) {
                         disruptions[dischargeId] = anomalyTime;
                     }
@@ -1344,25 +1321,23 @@
             return disruptions;
         }
 
-        // Aplicar tiempos de disrupción a las descargas
         function applyDisruptionTimesToDischarges(disruptions) {
             let appliedCount = 0;
             
             discharges.forEach(discharge => {
                 if (discharge.files.length === 0) return;
                 
-                // Intentar extraer el ID de descarga del primer archivo
                 const firstFileName = discharge.files[0].name;
                 const match = firstFileName.match(/DES_(\d+)/i);
                 
                 if (match && match[1]) {
                     const dischargeId = match[1];
                     
-                    // Si hay un tiempo de disrupción para este ID, aplicarlo
+                    // If there is a disruption time for this ID, apply it
                     if (disruptions[dischargeId]) {
                         discharge.anomalyTime = disruptions[dischargeId];
                         
-                        // Actualizar el input en la UI
+                        // Update UI input
                         const inputElem = document.querySelector(`.anomaly-time-input[data-discharge-id="${discharge.id}"]`);
                         if (inputElem) {
                             inputElem.value = disruptions[dischargeId];
@@ -1376,7 +1351,7 @@
             return appliedCount;
         }
 
-        // Cuando se carga el DOM
+        // When DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
             predictionDetailsModal = new bootstrap.Modal(document.getElementById('predictionDetailsModal'));
             configModal = new bootstrap.Modal(document.getElementById('configModal'));
@@ -1386,11 +1361,10 @@
                 socket.emit('request-health');
             });
 
-            // Event listener para cargar tiempos de disrupción
             document.getElementById('loadDisruptionTimesBtn').addEventListener('click', async function() {
                 const fileInput = document.getElementById('disruptionTimesFile');
                 if (!fileInput.files || fileInput.files.length === 0) {
-                    alert('Por favor seleccione un archivo con los tiempos de disrupción');
+                    alert('Select a file to load disruption times');
                     return;
                 }
 
@@ -1400,23 +1374,23 @@
                     const appliedCount = applyDisruptionTimesToDischarges(disruptions);
                     
                     updateJsonPreview();
-                    alert(`Se han aplicado ${appliedCount} tiempos de disrupción correctamente`);
+                    alert(`${appliedCount} disruption times have been applied`);
                 } catch (error) {
-                    alert('Error al procesar el archivo de tiempos de disrupción: ' + error.message);
+                    alert('Error at processing disruption times: ' + error.message);
                 }
             });
 
-            // Event listener para descargar JSON
+            // Event listener to download JSON
             document.getElementById('downloadJsonBtn').addEventListener('click', function() {
                 try {
                     const trainingData = processDischargesForTraining();
                     
-                    // Crear archivo para descargar
+                    // Create file to download
                     const dataStr = JSON.stringify(trainingData, null, 2);
                     const blob = new Blob([dataStr], { type: 'application/json' });
                     const url = URL.createObjectURL(blob);
                     
-                    // Crear enlace de descarga y ejecutarlo
+                    // Create download link and execute it
                     const downloadLink = document.createElement('a');
                     downloadLink.href = url;
                     downloadLink.download = 'training_data.json';
@@ -1425,7 +1399,7 @@
                     document.body.removeChild(downloadLink);
                     URL.revokeObjectURL(url);
                 } catch (error) {
-                    alert('Error al generar el archivo JSON: ' + error.message);
+                    alert('Error generating JSON: ' + error.message);
                 }
             });
 
@@ -1442,13 +1416,14 @@
                     }
                     renderSensorFiles();
                 } catch (error) {
-                    alert('Error al leer los archivos: ' + error.message);
+                    alert('Error reading files: ' + error.message);
                 }
             });
             
             document.getElementById('processSensorFilesBtn').addEventListener('click', function() {
+                console.log('Processing sensor files:', sensorFiles);
                 try {
-                    const processedData = processSensorFiles(sensorFiles);
+                    const processedData = processSignalFiles(sensorFiles);
                     
                     socket.emit('run-prediction', processedData);
                     
@@ -1456,25 +1431,27 @@
                     document.getElementById('predictionResult').innerHTML = `
                         <div class="text-center">
                             <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Cargando...</span>
+                                <span class="visually-hidden">Loading...</span>
                             </div>
-                            <p class="mt-2">Procesando predicción...</p>
+                            <p class="mt-2">Processing prediction...</p>
                         </div>
                     `;
                     document.getElementById('predictionResult').className = 'alert';
+                    console.log('Processed data:', processedData);
                 } catch (error) {
+                    console.error('Error processing sensor files:', error);
                     document.getElementById('predictionResultContainer').style.display = 'block';
                     document.getElementById('predictionResult').innerHTML = `Error: ${error.message}`;
                     document.getElementById('predictionResult').className = 'alert alert-danger';
                 }
             });
 
-            // Event listener para el botón de añadir descarga
+            // Event listener for the add discharge button
             document.getElementById('addDischargeBtn').addEventListener('click', function() {
                 addDischarge();
             });
 
-            // Event listener para el botón de mostrar/ocultar vista previa
+            // Event listener for the toggle preview button
             document.getElementById('togglePreviewBtn').addEventListener('click', function() {
                 const previewContainer = document.getElementById('jsonPreviewContainer');
                 if (previewContainer.style.display === 'none') {
@@ -1485,7 +1462,7 @@
                 }
             });
 
-            // Event listener para procesar descargas para entrenamiento
+            // Event listener for processing discharges for training
             document.getElementById('processDischargesBtn').addEventListener('click', function() {
                 try {
                     const trainingData = processDischargesForTraining();
@@ -1518,16 +1495,16 @@
                     .catch(error => {
                         document.getElementById('trainingResultContainer').style.display = 'block';
                         document.getElementById('trainingResult').className = 'alert alert-danger';
-                        document.getElementById('trainingResult').innerHTML = `Error al enviar datos de entrenamiento: ${error.message}`;
+                        document.getElementById('trainingResult').innerHTML = `Error sending training data: ${error.message}`;
                     });
                     
                     document.getElementById('trainingResultContainer').style.display = 'block';
                     document.getElementById('trainingResult').innerHTML = `
                         <div class="text-center">
                             <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Cargando...</span>
+                                <span class="visually-hidden">Loading...</span>
                             </div>
-                            <p class="mt-2">Enviando datos de entrenamiento...</p>
+                            <p class="mt-2">Sending training data...</p>
                         </div>
                     `;
                     document.getElementById('trainingResult').className = 'alert';
@@ -1545,7 +1522,7 @@
                     const content = await readFileAsText(e.target.files[0]);
                     document.getElementById('testDataTextarea').value = content;
                 } catch (error) {
-                    alert('Error al leer el archivo: ' + error.message);
+                    alert('Error reading file: ' + error.message);
                 }
             });
 
@@ -1556,66 +1533,8 @@
                     const content = await readFileAsText(e.target.files[0]);
                     document.getElementById('trainingDataTextarea').value = content;
                 } catch (error) {
-                    alert('Error al leer el archivo: ' + error.message);
+                    alert('Error reading file: ' + error.message);
                 }
-            });
-
-            document.getElementById('loadPredictionSampleBtn').addEventListener('click', function() {
-                fetch('/sample_data.json')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('testDataTextarea').value = data;
-                })
-                .catch(error => {
-                    alert('Error al cargar datos de ejemplo: ' + error.message);
-                });
-            });
-
-            document.getElementById('loadTrainingSampleBtn').addEventListener('click', function() {
-                fetch('/sample_data.json')
-                .then(response => response.json())
-                .then(data => {
-                    // Crear formato de descarga
-                    const discharge = {
-                        id: "sample_discharge",
-                        signals: []
-                    };
-                    
-                    // Extraer datos de muestra y crear señales
-                    if (data.data) {
-                        const times = [];
-                        // Crear array de tiempos para todas las señales
-                        for (let i = 0; i < data.data.length; i++) {
-                            times.push(41.05 + i * 0.01);
-                        }
-                        
-                        // Añadir tiempos comunes al descarga
-                        discharge.times = times;
-                        discharge.length = times.length;
-                        
-                        // Crear un sensor por cada columna en los datos
-                        for (let i = 0; i < 7; i++) {
-                            const values = data.data.map(point => point[i]);
-                            
-                            discharge.signals.push({
-                                fileName: `sensor${i+1}.txt`,
-                                values: values
-                            });
-                        }
-                        
-                        // Añadir tiempo de anomalía (para fines de ejemplo)
-                        const anomalyIndex = Math.floor(Math.random() * times.length);
-                        discharge.anomalyTime = times[anomalyIndex];
-                    }
-                    
-                    // Mostrar en el textarea
-                    document.getElementById('trainingDataTextarea').value = JSON.stringify({ 
-                        discharges: [discharge] 
-                    }, null, 2);
-                })
-                .catch(error => {
-                    alert('Error al cargar datos de ejemplo: ' + error.message);
-                });
             });
 
             document.getElementById('testPredictionBtn').addEventListener('click', function() {
@@ -1630,13 +1549,13 @@
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Cargando...</span>
                             </div>
-                            <p class="mt-2">Procesando predicción...</p>
+                            <p class="mt-2">Processing prediction...</p>
                         </div>
                     `;
                     document.getElementById('predictionResult').className = 'alert';
                 } catch (error) {
                     document.getElementById('predictionResultContainer').style.display = 'block';
-                    document.getElementById('predictionResult').innerHTML = `Error: Formato JSON inválido`;
+                    document.getElementById('predictionResult').innerHTML = `Error: Invalid JSON format`;
                     document.getElementById('predictionResult').className = 'alert alert-danger';
                 }
             });
@@ -1645,10 +1564,9 @@
                 const trainingDataElem = document.getElementById('trainingDataTextarea');
                 try {
                     const trainingData = JSON.parse(trainingDataElem.value);
-                    
-                    // Verificar que el formato es correcto (solo discharges)
+
                     if (!trainingData.discharges || !Array.isArray(trainingData.discharges)) {
-                        throw new Error('Los datos deben tener un array "discharges"');
+                        throw new Error('The data must have a "discharges" array');
                     }
                     
                     fetch('/api/train', {
@@ -1660,7 +1578,7 @@
                     })
                     .then(response => {
                         if (!response.ok) {
-                            return response.json().then(err => { throw new Error(err.error || 'Error en la petición'); });
+                            return response.json().then(err => { throw new Error(err.error || 'Error in the request'); });
                         }
                         return response.json();
                     })
@@ -1668,11 +1586,11 @@
                         document.getElementById('trainingResultContainer').style.display = 'block';
                         document.getElementById('trainingResult').className = 'alert alert-success';
                         document.getElementById('trainingResult').innerHTML = `
-                            <h5>Entrenamiento iniciado</h5>
+                            <h5>Training started</h5>
                             <p>${result.message}</p>
-                            <p>Modelos exitosos: ${result.details.successful}</p>
-                            <p>Modelos fallidos: ${result.details.failed}</p>
-                            <p>Consulte los logs para más detalles.</p>
+                            <p>Successful models: ${result.details.successful}</p>
+                            <p>Failed models: ${result.details.failed}</p>
+                            <p>Check the logs for more details.</p>
                         `;
                     })
                     .catch(error => {
@@ -1685,9 +1603,9 @@
                     document.getElementById('trainingResult').innerHTML = `
                         <div class="text-center">
                             <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Cargando...</span>
+                                <span class="visually-hidden">Loading...</span>
                             </div>
-                            <p class="mt-2">Enviando datos de entrenamiento...</p>
+                            <p class="mt-2">Sending training data...</p>
                         </div>
                     `;
                     document.getElementById('trainingResult').className = 'alert';
@@ -1707,7 +1625,7 @@
                 .catch(error => {
                     document.getElementById('modelConfigContainer').innerHTML = `
                         <div class="alert alert-danger">
-                            Error al cargar la configuración: ${error.message}
+                            Error at loading configuration: ${error.message}
                         </div>
                     `;
                 });
@@ -1742,27 +1660,27 @@
             if (result.voting.decision === null) {
                 resultContainer.className = 'alert alert-warning';
                 resultContainer.innerHTML = `
-                    <h5>No se pudo determinar la clase</h5>
+                    <h5>Unable to determine the class</h5>
                     <p>${result.voting.message}</p>
                 `;
             } else {
                 resultContainer.className = 'alert alert-success';
                 if (result.voting.decision === 1) {
                     resultContainer.innerHTML = `
-                        <h5>Clase detectada: ANOMALÍA</h5>
+                        <h5>Detected class: ANOMALY</h5>
                     `;
                 } else if (result.voting.decision === 0) {
                     resultContainer.innerHTML = `
-                        <h5>Clase detectada: NORMAL</h5>
+                        <h5>Detected class: NORMAL</h5>
                     `;
                 } else {
                     resultContainer.innerHTML = `
-                        <h5>Clase detectada: DESCONOCIDA</h5>
+                        <h5>Detected class: UNKNOWN</h5>
                     `;
                 } 
 
                 resultContainer.innerHTML += `
-                    <p>Confianza: ${(result.voting.confidence * 100).toFixed(1)}%</p>
+                    <p>Confidence: ${(result.voting.confidence * 100).toFixed(1)}%</p>
                     <p>${result.voting.message}</p>
                 `;
             }
@@ -1773,7 +1691,7 @@
         });
 
         socket.on('success', function(data) {
-            console.log('Éxito:', data.message);
+            console.log('Success:', data.message);
         });
 
         socket.on('config-update', function(config) {
