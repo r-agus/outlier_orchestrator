@@ -10,7 +10,9 @@ const routes = require('./src/routes');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, {
+  maxHttpBufferSize: 10e6 
+});
 
 // Configurar Socket.io
 require('./src/utils/socket')(io);
