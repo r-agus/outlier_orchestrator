@@ -513,11 +513,11 @@
             }[status.status] || 'status-unknown';
 
             const statusText = {
-                'online': 'En línea',
-                'offline': 'Fuera de línea',
-                'disabled': 'Deshabilitado',
-                'unknown': 'Desconocido'
-            }[status.status] || 'Desconocido';
+                'online': 'Online',
+                'offline': 'Offline',
+                'disabled': 'Disabled',
+                'unknown': 'Unknown'
+            }[status.status] || 'Unknown';
 
             const lastCheck = status.lastCheck ? formatDate(status.lastCheck) : 'Never';
 

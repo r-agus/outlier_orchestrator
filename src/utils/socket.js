@@ -104,13 +104,13 @@ module.exports = function(io) {
             }))
           });
           
-          socket.emit('success', { message: `Modelo ${modelName} ${enabled ? 'habilitado' : 'deshabilitado'}` });
+          socket.emit('success', { message: `Model ${modelName} ${enabled ? 'enabled' : 'disabled'}` });
         } else {
-          socket.emit('error', { message: `Modelo ${modelName} no encontrado` });
+          socket.emit('error', { message: `Model ${modelName} not found` });
         }
       } catch (error) {
-        logger.error(`Error al actualizar configuración: ${error.message}`);
-        socket.emit('error', { message: 'Error al actualizar configuración' });
+        logger.error(`Error at updating configuration: ${error.message}`);
+        socket.emit('error', { message: 'Error at updating configuration' });
       }
     });
     
