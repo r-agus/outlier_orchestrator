@@ -179,10 +179,10 @@ class OrchestratorController {
       // Actualizar configuración
       config.models[modelName].enabled = enabled;
       
-      logger.info(`Modelo '${modelName}' ${enabled ? 'habilitado' : 'deshabilitado'}`);
+      logger.info(`Modelo '${modelName}' ${enabled ? 'enabled' : 'disabled'}`);
       
       return res.status(StatusCodes.OK).json({
-        message: `Modelo '${modelName}' ${enabled ? 'habilitado' : 'deshabilitado'}`,
+        message: `Modelo '${modelName}' ${enabled ? 'enabled' : 'disabled'}`,
         models: Object.keys(config.models).map(model => ({
           name: model,
           enabled: config.models[model].enabled,
