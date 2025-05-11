@@ -1638,6 +1638,15 @@
             for (const [name, modelStatus] of Object.entries(status)) {
                 modelsContainer.innerHTML += renderModel(name, modelStatus);
             }
+
+            document.querySelectorAll('#modelsContainer .model-toggle').forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    const modelName = this.dataset.model;
+                    const enabled = this.checked;
+                    
+                    socket.emit('toggle-model', { modelName, enabled });
+                });
+            });
         });
 
         socket.on('prediction-history', function(history) {
