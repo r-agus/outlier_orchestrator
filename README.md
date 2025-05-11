@@ -6,7 +6,7 @@ Este repositorio contiene el frontend del proyecto. Desde aquí se puede selecci
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/tu-usuario/outlier_orchestrator.git
+git clone https://github.com/outlierClassifier/outlier_orchestrator.git
 
 # Entrar al directorio
 cd outlier_orchestrator
