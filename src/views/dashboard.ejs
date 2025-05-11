@@ -1,79 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control Panel - Discharge classification system</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/node_modules/chart.js/dist/chart.umd.js"></script>
     <style>
         body {
             padding-top: 20px;
             background-color: #f8f9fa;
         }
+
         .model-card {
             height: 100%;
         }
+
         .model-status {
             font-size: 1.2rem;
             font-weight: bold;
         }
+
         .status-online {
             color: #198754;
         }
+
         .status-offline {
             color: #dc3545;
         }
+
         .status-disabled {
             color: #6c757d;
         }
+
         .status-unknown {
             color: #fd7e14;
         }
+
         .card-header {
             font-weight: bold;
         }
+
         .prediction-item {
             border-left: 4px solid transparent;
             margin-bottom: 10px;
             padding: 10px;
             background-color: #fff;
             border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
         }
+
         .prediction-class-0 {
             border-left-color: #0d6efd;
         }
+
         .prediction-class-1 {
             border-left-color: #dc3545;
         }
+
         .prediction-undefined {
             border-left-color: #6c757d;
         }
+
         .confidence-bar {
             height: 8px;
             margin-top: 5px;
             border-radius: 4px;
             background-color: #e9ecef;
         }
+
         .confidence-value {
             height: 100%;
             border-radius: 4px;
             background-color: #0d6efd;
         }
+
         .timestamp {
             color: #6c757d;
             font-size: 0.8rem;
         }
+
         .nav-tabs {
             margin-bottom: 15px;
         }
+
         .nav-tabs .nav-link {
             min-width: 120px;
             text-align: center;
         }
+
         .form-file {
             margin-bottom: 15px;
         }
+
         .sensor-file-item {
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -81,13 +101,16 @@
             margin-bottom: 10px;
             background-color: #fff;
         }
+
         .sensor-file-item .form-control {
             margin-top: 5px;
         }
+
         .sensor-files-container {
             max-height: 400px;
             overflow-y: auto;
         }
+
         .sensor-preview {
             font-family: monospace;
             font-size: 12px;
@@ -95,34 +118,41 @@
             overflow: hidden;
             max-height: 100px;
         }
+
         .btn-group-sm .btn {
             margin-right: 5px;
         }
+
         .models-row {
             display: flex;
             flex-wrap: wrap;
         }
+
         .model-col {
             flex: 0 0 33.333333%;
             max-width: 33.333333%;
             padding: 0 10px;
             margin-bottom: 20px;
         }
+
         @media (max-width: 992px) {
             .model-col {
                 flex: 0 0 50%;
                 max-width: 50%;
             }
         }
+
         @media (max-width: 768px) {
             .model-col {
                 flex: 0 0 100%;
                 max-width: 100%;
             }
         }
+
         .card {
             height: 100%;
         }
+
         .discharge-item {
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -130,6 +160,7 @@
             margin-bottom: 15px;
             background-color: #fff;
         }
+
         .discharge-header {
             display: flex;
             justify-content: space-between;
@@ -138,12 +169,14 @@
             padding-bottom: 10px;
             margin-bottom: 15px;
         }
+
         .discharge-files {
             margin-top: 10px;
             max-height: 200px;
             overflow-y: auto;
             padding: 0;
         }
+
         .discharge-file-item {
             border-bottom: 1px solid #eee;
             padding: 8px;
@@ -151,23 +184,29 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .discharge-file-item:last-child {
             border-bottom: none;
         }
+
         .anomaly-time-input {
             max-width: 200px;
         }
+
         .collapsible {
             cursor: pointer;
         }
+
         .collapse-indicator {
             transition: transform 0.3s ease;
         }
+
         .collapsed .collapse-indicator {
             transform: rotate(-90deg);
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header class="pb-3 mb-4 border-bottom">
@@ -175,16 +214,21 @@
                 <h1 class="fw-bold">Anomaly detection system</h1>
                 <div>
                     <button id="refreshBtn" class="btn btn-sm btn-outline-secondary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
-                            <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
-                            <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                            <path
+                                d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z" />
+                            <path fill-rule="evenodd"
+                                d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z" />
                         </svg>
                         Actualizar Estado
                     </button>
                     <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#configModal">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
-                            <path d="M8 4.754a.246.246 0 1 1 0-.5.246.246 0 0 1 0 .5z"/>
-                            <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-gear" viewBox="0 0 16 16">
+                            <path d="M8 4.754a.246.246 0 1 1 0-.5.246.246 0 0 1 0 .5z" />
+                            <path
+                                d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z" />
                         </svg>
                         Configurar
                     </button>
@@ -211,13 +255,17 @@
             <div class="col-12">
                 <ul class="nav nav-tabs" id="dataTabs" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="prediction-tab" data-bs-toggle="tab" data-bs-target="#prediction" type="button" role="tab" aria-controls="prediction" aria-selected="true">Prediction</button>
+                        <button class="nav-link active" id="prediction-tab" data-bs-toggle="tab"
+                            data-bs-target="#prediction" type="button" role="tab" aria-controls="prediction"
+                            aria-selected="true">Prediction</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="training-tab" data-bs-toggle="tab" data-bs-target="#training" type="button" role="tab" aria-controls="training" aria-selected="false">Training</button>
+                        <button class="nav-link" id="training-tab" data-bs-toggle="tab" data-bs-target="#training"
+                            type="button" role="tab" aria-controls="training" aria-selected="false">Training</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false">History</button>
+                        <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history"
+                            type="button" role="tab" aria-controls="history" aria-selected="false">History</button>
                     </li>
                 </ul>
             </div>
@@ -234,51 +282,64 @@
                             </div>
                             <div class="card-body">
                                 <div class="alert alert-info mb-3">
-                                    <strong>Information:</strong> You can upload multiple text files (.txt) containing signal data or use the JSON format directly.
+                                    <strong>Information:</strong> You can upload multiple text files (.txt) containing
+                                    signal data or use the JSON format directly.
                                 </div>
 
                                 <ul class="nav nav-pills mb-3" id="predictionOptions" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="text-files-tab" data-bs-toggle="pill" data-bs-target="#text-files-content" type="button" role="tab" aria-controls="text-files-content" aria-selected="true">Text files</button>
+                                        <button class="nav-link active" id="text-files-tab" data-bs-toggle="pill"
+                                            data-bs-target="#text-files-content" type="button" role="tab"
+                                            aria-controls="text-files-content" aria-selected="true">Text files</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="json-input-tab" data-bs-toggle="pill" data-bs-target="#json-input-content" type="button" role="tab" aria-controls="json-input-content" aria-selected="false">JSON</button>
+                                        <button class="nav-link" id="json-input-tab" data-bs-toggle="pill"
+                                            data-bs-target="#json-input-content" type="button" role="tab"
+                                            aria-controls="json-input-content" aria-selected="false">JSON</button>
                                     </li>
                                 </ul>
-                                
+
                                 <div class="tab-content" id="predictionOptionsContent">
                                     <!-- Text File Option -->
-                                    <div class="tab-pane fade show active" id="text-files-content" role="tabpanel" aria-labelledby="text-files-tab">
+                                    <div class="tab-pane fade show active" id="text-files-content" role="tabpanel"
+                                        aria-labelledby="text-files-tab">
                                         <div class="mb-3">
                                             <label for="sensorFilesInput" class="form-label">Signal Files (.txt)</label>
-                                            <input type="file" class="form-control" id="sensorFilesInput" multiple accept=".txt" aria-describedby="sensorFilesHelp">
-                                            <div id="sensorFilesHelp" class="form-text">Select the text files containing the signal data (one file per signal).</div>
+                                            <input type="file" class="form-control" id="sensorFilesInput" multiple
+                                                accept=".txt" aria-describedby="sensorFilesHelp">
+                                            <div id="sensorFilesHelp" class="form-text">Select the text files containing
+                                                the signal data (one file per signal).</div>
                                         </div>
-                                        
+
                                         <div class="sensor-files-container mb-3" id="sensorFilesContainer">
                                             <div class="text-center text-muted py-3" id="noFilesMsg">
                                                 No files uploaded
                                             </div>
                                             <!-- Signal files will be displayed here -->
                                         </div>
-                                        
+
                                         <div class="d-grid">
-                                            <button id="processSensorFilesBtn" class="btn btn-primary" disabled>Process and Make Prediction</button>
+                                            <button id="processSensorFilesBtn" class="btn btn-primary" disabled>Process
+                                                and Make Prediction</button>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- JSON option -->
-                                    <div class="tab-pane fade" id="json-input-content" role="tabpanel" aria-labelledby="json-input-tab">
+                                    <div class="tab-pane fade" id="json-input-content" role="tabpanel"
+                                        aria-labelledby="json-input-tab">
                                         <div class="mb-3">
                                             <label for="predictionFile" class="form-label">Upload JSON</label>
                                             <div class="d-flex">
-                                                <input type="file" class="form-control" id="predictionFile" accept=".json" aria-describedby="predictionFileHelp">
+                                                <input type="file" class="form-control" id="predictionFile"
+                                                    accept=".json" aria-describedby="predictionFileHelp">
                                             </div>
-                                            <div id="predictionFileHelp" class="form-text">Select a JSON file containing prediction data.</div>
+                                            <div id="predictionFileHelp" class="form-text">Select a JSON file containing
+                                                prediction data.</div>
                                         </div>
                                         <div class="mb-3">
                                             <label for="testDataTextarea" class="form-label">Data (JSON format)</label>
-                                            <textarea class="form-control" id="testDataTextarea" rows="8" placeholder='{ "signals": [{ "fileName": "sensor1.txt", "times": [41.052, 41.054, ...], "values": [-759337, -760461, ...], "length": 5, "anomalyTime": null }] }'></textarea>
+                                            <textarea class="form-control" id="testDataTextarea" rows="8"
+                                                placeholder='{ "signals": [{ "fileName": "sensor1.txt", "times": [41.052, 41.054, ...], "values": [-759337, -760461, ...], "length": 5, "anomalyTime": null }] }'></textarea>
                                         </div>
                                         <div class="d-grid">
                                             <button id="testPredictionBtn" class="btn btn-primary">Predict</button>
@@ -308,90 +369,117 @@
                             </div>
                             <div class="card-body">
                                 <div class="alert alert-warning mb-3">
-                                    <strong>Important:</strong> The training will send data to all enabled models. Each model will perform its own preprocessing.
+                                    <strong>Important:</strong> The training will send data to all enabled models. Each
+                                    model will perform its own preprocessing.
                                 </div>
-                                
+
                                 <ul class="nav nav-pills mb-3" id="trainingOptions" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="training-text-files-tab" data-bs-toggle="pill" data-bs-target="#training-text-files-content" type="button" role="tab" aria-controls="training-text-files-content" aria-selected="true">Text files</button>
+                                        <button class="nav-link active" id="training-text-files-tab"
+                                            data-bs-toggle="pill" data-bs-target="#training-text-files-content"
+                                            type="button" role="tab" aria-controls="training-text-files-content"
+                                            aria-selected="true">Text files</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="training-json-input-tab" data-bs-toggle="pill" data-bs-target="#training-json-input-content" type="button" role="tab" aria-controls="training-json-input-content" aria-selected="false">JSON</button>
+                                        <button class="nav-link" id="training-json-input-tab" data-bs-toggle="pill"
+                                            data-bs-target="#training-json-input-content" type="button" role="tab"
+                                            aria-controls="training-json-input-content"
+                                            aria-selected="false">JSON</button>
                                     </li>
                                 </ul>
-                                
+
                                 <div class="tab-content" id="trainingOptionsContent">
                                     <!-- Text file option for training -->
-                                    <div class="tab-pane fade show active" id="training-text-files-content" role="tabpanel" aria-labelledby="training-text-files-tab">
+                                    <div class="tab-pane fade show active" id="training-text-files-content"
+                                        role="tabpanel" aria-labelledby="training-text-files-tab">
                                         <div class="mb-3">
                                             <div class="d-flex justify-content-between mb-3">
                                                 <div>
-                                                    <input type="file" class="form-control" id="disruptionTimesFile" accept=".txt" style="display: inline-block; width: auto;">
-                                                    <button id="loadDisruptionTimesBtn" class="btn btn-outline-info ms-2">
+                                                    <input type="file" class="form-control" id="disruptionTimesFile"
+                                                        accept=".txt" style="display: inline-block; width: auto;">
+                                                    <button id="loadDisruptionTimesBtn"
+                                                        class="btn btn-outline-info ms-2">
                                                         Load disruption times
                                                     </button>
                                                 </div>
                                                 <button id="addDischargeBtn" class="btn btn-outline-primary">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                                                        <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z" />
                                                     </svg>
                                                     Add discharge
                                                 </button>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="discharges-container mb-3" id="dischargesContainer">
                                             <div class="text-center text-muted py-3" id="noDischargesMsg">
                                                 No discharges added
                                             </div>
                                             <!-- Discharges will be displayed here -->
                                         </div>
-                                        
+
                                         <div class="mb-3">
                                             <div class="card">
-                                                <div class="card-header d-flex justify-content-between align-items-center">
+                                                <div
+                                                    class="card-header d-flex justify-content-between align-items-center">
                                                     <span>JSON Preview</span>
                                                     <div>
-                                                        <button class="btn btn-sm btn-outline-success me-2" id="downloadJsonBtn">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                                                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                                                        <button class="btn btn-sm btn-outline-success me-2"
+                                                            id="downloadJsonBtn">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                height="16" fill="currentColor" class="bi bi-download"
+                                                                viewBox="0 0 16 16">
+                                                                <path
+                                                                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                                                                <path
+                                                                    d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
                                                             </svg>
                                                             Download JSON
                                                         </button>
-                                                        <button class="btn btn-sm btn-outline-secondary" id="togglePreviewBtn">
+                                                        <button class="btn btn-sm btn-outline-secondary"
+                                                            id="togglePreviewBtn">
                                                             Show/Hide Preview
                                                         </button>
                                                     </div>
                                                 </div>
                                                 <div class="card-body" id="jsonPreviewContainer" style="display: none;">
                                                     <div class="alert alert-info mb-3">
-                                                        <strong>Note:</strong> This is a simplified view. Only the first lines of each file are shown for clarity.
+                                                        <strong>Note:</strong> This is a simplified view. Only the first
+                                                        lines of each file are shown for clarity.
                                                     </div>
-                                                    <pre id="jsonPreview" class="bg-light p-3 rounded" style="max-height: 200px; overflow: auto; font-size: 12px;"></pre>
+                                                    <pre id="jsonPreview" class="bg-light p-3 rounded"
+                                                        style="max-height: 200px; overflow: auto; font-size: 12px;"></pre>
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="d-grid">
-                                            <button id="processDischargesBtn" class="btn btn-warning" disabled>Process and Start Training</button>
+                                            <button id="processDischargesBtn" class="btn btn-warning" disabled>Process
+                                                and Start Training</button>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- JSON input option for training -->
-                                    <div class="tab-pane fade" id="training-json-input-content" role="tabpanel" aria-labelledby="training-json-input-tab">
+                                    <div class="tab-pane fade" id="training-json-input-content" role="tabpanel"
+                                        aria-labelledby="training-json-input-tab">
                                         <div class="mb-3">
                                             <label class="form-label">Upload JSON</label>
                                             <div class="d-flex">
-                                                <input type="file" class="form-control" id="trainingFile" accept=".json">
+                                                <input type="file" class="form-control" id="trainingFile"
+                                                    accept=".json">
                                             </div>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="trainingDataTextarea" class="form-label">Data (JSON format)</label>
-                                            <textarea class="form-control" id="trainingDataTextarea" rows="8" placeholder='{ "signals": [{ "fileName": "sensor1.txt", "times": [41.052, 41.054, ...], "values": [-759337, -760461, ...], "length": 5, "anomalyTime": 41.056 }] }'></textarea>
+                                            <label for="trainingDataTextarea" class="form-label">Data (JSON
+                                                format)</label>
+                                            <textarea class="form-control" id="trainingDataTextarea" rows="8"
+                                                placeholder='{ "signals": [{ "fileName": "sensor1.txt", "times": [41.052, 41.054, ...], "values": [-759337, -760461, ...], "length": 5, "anomalyTime": 41.056 }] }'></textarea>
                                         </div>
                                         <div class="d-grid">
-                                            <button id="startTrainingBtn" class="btn btn-warning">Start Training</button>
+                                            <button id="startTrainingBtn" class="btn btn-warning">Start
+                                                Training</button>
                                         </div>
                                     </div>
                                 </div>
@@ -477,7 +565,30 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <pre id="filePreviewContent" class="bg-light p-3 rounded" style="max-height: 400px; overflow: auto;"></pre>
+                    <ul class="nav nav-tabs mb-3" id="filePreviewTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="graph-tab" data-bs-toggle="tab"
+                                data-bs-target="#graph-view" type="button" role="tab" aria-controls="graph-view"
+                                aria-selected="true">Graph</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="raw-tab" data-bs-toggle="tab" data-bs-target="#raw-view"
+                                type="button" role="tab" aria-controls="raw-view" aria-selected="false">Raw
+                                Text</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="filePreviewTabContent">
+                        <div class="tab-pane fade show active" id="graph-view" role="tabpanel"
+                            aria-labelledby="graph-tab">
+                            <div class="chart-container" style="position: relative; height:400px;">
+                                <canvas id="signalChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="raw-view" role="tabpanel" aria-labelledby="raw-tab">
+                            <pre id="filePreviewContent" class="bg-light p-3 rounded"
+                                style="max-height: 400px; overflow: auto;"></pre>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -557,7 +668,7 @@
             const historyHtml = predictionHistory.map((prediction, index) => {
                 const predClass = prediction.result !== null ? prediction.result : 'undefined';
                 const confidenceWidth = prediction.confidence ? (prediction.confidence * 100) : 0;
-                
+
                 return `
                     <div class="prediction-item prediction-class-${predClass}" 
                          data-index="${index}" 
@@ -584,7 +695,7 @@
 
         function renderSensorFiles() {
             const container = document.getElementById('sensorFilesContainer');
-            
+
             if (sensorFiles.length === 0) {
                 container.innerHTML = `
                     <div class="text-center text-muted py-3">
@@ -594,11 +705,11 @@
                 document.getElementById('processSensorFilesBtn').disabled = true;
                 return;
             }
-            
+
             let html = '';
             sensorFiles.forEach((file, index) => {
                 const previewLines = file.content.split('\n').slice(0, 3).join('\n');
-                
+
                 html += `
                     <div class="sensor-file-item">
                         <div class="d-flex justify-content-between">
@@ -616,19 +727,19 @@
                     </div>
                 `;
             });
-            
+
             container.innerHTML = html;
             document.getElementById('processSensorFilesBtn').disabled = false;
-            
+
             container.querySelectorAll('.btn-preview').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     const index = parseInt(this.dataset.index);
                     showFilePreview(sensorFiles[index].name, sensorFiles[index].content);
                 });
             });
-            
+
             container.querySelectorAll('.btn-remove').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     const index = parseInt(this.dataset.index);
                     sensorFiles.splice(index, 1);
                     renderSensorFiles();
@@ -644,7 +755,7 @@
                 files: [],
                 anomalyTime: null
             };
-            
+
             discharges.push(discharge);
             renderDischarges();
             return dischargeId;
@@ -662,7 +773,7 @@
 
         function renderDischarges() {
             const container = document.getElementById('dischargesContainer');
-            
+
             // If there are no discharges, show a message and disable the button
             if (discharges.length === 0) {
                 container.innerHTML = `
@@ -673,14 +784,14 @@
                 document.getElementById('processDischargesBtn').disabled = true;
                 return;
             }
-            
+
             // If there are discharges, enable button
             document.getElementById('processDischargesBtn').disabled = false;
-            
+
             let html = '';
             discharges.forEach((discharge) => {
                 const filesCount = discharge.files.length;
-                
+
                 html += `
                     <div class="discharge-item" id="discharge-${discharge.id}">
                         <div class="discharge-header">
@@ -718,22 +829,22 @@
                     </div>
                 `;
             });
-            
+
             container.innerHTML = html;
-            
+
             // Add event listeners to the new elements
             container.querySelectorAll('.remove-discharge-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     const dischargeId = parseInt(this.getAttribute('data-discharge-id'));
                     removeDischarge(dischargeId);
                 });
             });
-            
+
             container.querySelectorAll('.discharge-files-input').forEach(input => {
-                input.addEventListener('change', async function(e) {
+                input.addEventListener('change', async function (e) {
                     const dischargeId = parseInt(this.getAttribute('data-discharge-id'));
                     const dischargeIndex = discharges.findIndex(d => d.id === dischargeId);
-                    
+
                     if (dischargeIndex !== -1 && e.target.files.length > 0) {
                         for (const file of e.target.files) {
                             try {
@@ -746,19 +857,19 @@
                                 alert(`Error at reading file ${file.name}: ${error.message}`);
                             }
                         }
-                        
+
                         renderDischarges();
                         updateJsonPreview();
                         e.target.value = ''; // Reset the input to allow loading the same files again
                     }
                 });
             });
-            
+
             container.querySelectorAll('.anomaly-time-input').forEach(input => {
-                input.addEventListener('change', function() {
+                input.addEventListener('change', function () {
                     const dischargeId = parseInt(this.getAttribute('data-discharge-id'));
                     const dischargeIndex = discharges.findIndex(d => d.id === dischargeId);
-                    
+
                     if (dischargeIndex !== -1) {
                         const value = this.value.trim();
                         discharges[dischargeIndex].anomalyTime = value ? parseFloat(value) : null;
@@ -766,26 +877,26 @@
                     }
                 });
             });
-            
+
             container.querySelectorAll('.preview-file-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     const dischargeId = parseInt(this.getAttribute('data-discharge-id'));
                     const fileIndex = parseInt(this.getAttribute('data-file-index'));
                     const dischargeIndex = discharges.findIndex(d => d.id === dischargeId);
-                    
+
                     if (dischargeIndex !== -1 && discharges[dischargeIndex].files[fileIndex]) {
                         const file = discharges[dischargeIndex].files[fileIndex];
                         showFilePreview(file.name, file.content);
                     }
                 });
             });
-            
+
             container.querySelectorAll('.remove-file-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     const dischargeId = parseInt(this.getAttribute('data-discharge-id'));
                     const fileIndex = parseInt(this.getAttribute('data-file-index'));
                     const dischargeIndex = discharges.findIndex(d => d.id === dischargeId);
-                    
+
                     if (dischargeIndex !== -1 && fileIndex !== -1) {
                         discharges[dischargeIndex].files.splice(fileIndex, 1);
                         renderDischarges();
@@ -800,7 +911,7 @@
             if (discharge.files.length === 0) {
                 return '<div class="text-center text-muted py-3">No files added</div>';
             }
-            
+
             let html = '';
             discharge.files.forEach((file, fileIndex) => {
                 html += `
@@ -823,7 +934,7 @@
                     </div>
                 `;
             });
-            
+
             return html;
         }
 
@@ -833,10 +944,10 @@
                 document.getElementById('jsonPreview').textContent = 'There is no data to show';
                 return;
             }
-            
+
             // Create data structure for the preview with optimized format
             const previewData = { discharges: [] };
-            
+
             // Process each discharge
             discharges.forEach(discharge => {
                 if (discharge.files.length === 0) {
@@ -844,7 +955,7 @@
                 }
 
                 let dischargeId = `discharge_${discharge.id + 1}`;
-                
+
                 // Try to extract the identifier from the file name
                 if (discharge.files.length > 0) {
                     const fileName = discharge.files[0].name;
@@ -858,37 +969,37 @@
                     id: dischargeId,
                     signals: []
                 };
-                
+
                 // Add anomaly time if defined
                 if (discharge.anomalyTime !== null) {
                     dischargeData.anomalyTime = discharge.anomalyTime;
                 }
-                
+
                 // Check if all files have the same times
                 let commonTimes = [];
                 let allSameTime = true;
                 let firstFileTimes = null;
-                
+
                 // Take the first 5 lines for the preview
                 discharge.files.forEach((file, index) => {
                     const lines = file.content.trim().split('\n');
                     const previewLines = Math.min(5, lines.length);
                     const times = [];
-                    
+
                     for (let i = 0; i < previewLines; i++) {
                         const parts = lines[i].trim().split(/\s+/);
                         if (parts.length >= 2) {
                             times.push(parseFloat(parts[0]));
                         }
                     }
-                    
+
                     if (index === 0) {
                         firstFileTimes = times;
                     } else if (JSON.stringify(times) !== JSON.stringify(firstFileTimes)) {
                         allSameTime = false;
                     }
                 });
-                
+
                 if (allSameTime && firstFileTimes) {
                     dischargeData.times = firstFileTimes;
                     const totalLines = discharge.files[0].content.trim().split('\n').length;
@@ -897,7 +1008,7 @@
                         dischargeData._previewNote = `... displaying 5 of ${totalLines} lines`;
                     }
                 }
-                
+
                 // Process each file
                 discharge.files.forEach(file => {
                     try {
@@ -905,7 +1016,7 @@
                         const previewLines = Math.min(5, lines.length);
                         const times = [];
                         const values = [];
-                        
+
                         for (let i = 0; i < previewLines; i++) {
                             const line = lines[i].trim();
                             const parts = line.split(/\s+/);
@@ -916,12 +1027,12 @@
                                 values.push(parseFloat(parts[1]));
                             }
                         }
-                        
+
                         const sensorData = {
                             fileName: file.name,
                             values: values
                         };
-                        
+
                         // Solo incluimos tiempos si no son comunes
                         if (!allSameTime) {
                             sensorData.times = times;
@@ -931,16 +1042,16 @@
                                 sensorData._previewNote = `... showing 5 of ${totalLines} lines`;
                             }
                         }
-                        
+
                         dischargeData.signals.push(sensorData);
                     } catch (error) {
                         console.error(`Error processing file ${file.name}:`, error);
                     }
                 });
-                
+
                 previewData.discharges.push(dischargeData);
             });
-            
+
             // Format the JSON for display
             document.getElementById('jsonPreview').textContent = JSON.stringify(previewData, null, 2);
         }
@@ -950,7 +1061,7 @@
             try {
                 // Group files by discharge (extract discharge ID from the file name)
                 const dischargeGroups = {};
-                
+
                 files.forEach(file => {
                     // Attempt to extract discharge ID from the file name
                     let dischargeId = "unknown";
@@ -958,7 +1069,7 @@
                     if (match && match[1]) {
                         dischargeId = match[1];
                     }
-                    
+
                     // Create group if it doesn't exist
                     if (!dischargeGroups[dischargeId]) {
                         dischargeGroups[dischargeId] = {
@@ -976,25 +1087,25 @@
                 Object.values(dischargeGroups).forEach(group => {
                     let allSameTime = true;
                     let firstFileTimes = null;
-                    
+
                     group.files.forEach((file, index) => {
                         const lines = file.content.trim().split('\n');
                         const times = [];
-                        
+
                         for (const line of lines) {
                             const parts = line.trim().split(/\s+/);
                             if (parts.length >= 2) {
                                 times.push(parseFloat(parts[0]));
                             }
                         }
-                        
+
                         if (index === 0) {
                             firstFileTimes = times;
                         } else if (JSON.stringify(times) !== JSON.stringify(firstFileTimes)) {
                             allSameTime = false;
                         }
                     });
-                    
+
                     const discharge = {
                         id: group.id,
                         signals: []
@@ -1004,12 +1115,12 @@
                         discharge.times = firstFileTimes;
                         discharge.length = firstFileTimes.length;
                     }
-                    
+
                     group.files.forEach(file => {
                         const lines = file.content.trim().split('\n');
                         const values = [];
                         const times = [];
-                        
+
                         for (const line of lines) {
                             const parts = line.trim().split(/\s+/);
                             if (parts.length >= 2) {
@@ -1019,26 +1130,26 @@
                                 values.push(parseFloat(parts[1]));
                             }
                         }
-                        
+
                         const sensorData = {
                             fileName: file.name,
                             values: values
                         };
-                        
+
                         // If times are not common, include them in the sensor data
                         if (!allSameTime) {
                             sensorData.times = times;
                             sensorData.length = times.length;
                         }
-                        
+
                         discharge.signals.push(sensorData);
                     });
-                    
+
                     discharges.push(discharge);
                 });
-                
+
                 return { discharges };
-                
+
             } catch (error) {
                 throw new Error(`Error processing file: ${error.message}`);
             }
@@ -1050,9 +1161,9 @@
                 if (discharges.length === 0) {
                     throw new Error('No discharges to process');
                 }
-                
+
                 const trainingData = { discharges: [] };
-                
+
                 // Process each discharge as an independent discharge
                 discharges.forEach(discharge => {
                     // Check if there are files
@@ -1060,10 +1171,10 @@
                         console.warn(`Discharge #${discharge.id + 1} has no files`);
                         return;
                     }
-                    
+
                     // Extract the discharge identifier from the file name if possible
                     let dischargeId = `discharge_${discharge.id + 1}`;
-                    
+
                     // Attempt to extract the identifier from the file name
                     // Expected format: DES_XXXXX_YY where XXXXX is the discharge ID
                     if (discharge.files.length > 0) {
@@ -1073,25 +1184,25 @@
                             dischargeId = match[1];
                         }
                     }
-                    
+
                     const dischargeData = {
                         id: dischargeId,
                         signals: []
                     };
-                    
+
                     if (discharge.anomalyTime !== null) {
                         dischargeData.anomalyTime = discharge.anomalyTime;
                     }
-                    
+
                     let commonTimes = null;
                     let firstFileTimes = null;
                     let allSameTime = true;
-                    
+
                     // Process first all times to check if they are common
                     discharge.files.forEach((file, index) => {
                         const lines = file.content.trim().split('\n');
                         const times = [];
-                        
+
                         for (const line of lines) {
                             const parts = line.trim().split(/\s+/);
                             if (parts.length >= 2) {
@@ -1101,32 +1212,32 @@
                                 }
                             }
                         }
-                        
+
                         if (index === 0) {
                             firstFileTimes = times;
                         } else if (JSON.stringify(times) !== JSON.stringify(firstFileTimes)) {
                             allSameTime = false;
                         }
                     });
-                    
+
                     if (allSameTime && firstFileTimes) {
                         dischargeData.times = firstFileTimes;
                         dischargeData.length = firstFileTimes.length;
                     }
-                    
+
                     // Process values of each file
                     discharge.files.forEach(file => {
                         try {
                             const lines = file.content.trim().split('\n');
                             const values = [];
                             let fileTimes = [];
-                            
+
                             for (const line of lines) {
                                 const parts = line.trim().split(/\s+/);
                                 if (parts.length >= 2) {
                                     const time = parseFloat(parts[0]);
                                     const value = parseFloat(parts[1]);
-                                    
+
                                     if (!isNaN(time) && !isNaN(value)) {
                                         // If we don't have common times, store the times per file
                                         if (!allSameTime) {
@@ -1136,35 +1247,35 @@
                                     }
                                 }
                             }
-                            
+
                             const sensorData = {
                                 fileName: file.name,
                                 values: values
                             };
-                            
+
                             // If there are no common times, include the specific times of the file
                             if (!allSameTime) {
                                 sensorData.times = fileTimes;
                                 sensorData.length = fileTimes.length;
                             }
-                            
+
                             dischargeData.signals.push(sensorData);
-                            
+
                         } catch (error) {
                             throw new Error(`Error al procesar el archivo ${file.name}: ${error.message}`);
                         }
                     });
-                    
+
                     trainingData.discharges.push(dischargeData);
                 });
-                
+
                 // Verificar si se procesó algún descarga
                 if (trainingData.discharges.length === 0) {
                     throw new Error('No hay archivos válidos para entrenar');
                 }
-                
+
                 return trainingData;
-                
+
             } catch (error) {
                 throw error;
             }
@@ -1173,7 +1284,7 @@
         function renderModelConfig(models) {
             const configContainer = document.getElementById('modelConfigContainer');
             let html = '';
-            
+
             models.forEach(model => {
                 html += `
                     <div class="card mb-3">
@@ -1231,24 +1342,24 @@
                     </div>
                 `;
             });
-            
+
             configContainer.innerHTML = html;
-            
+
             document.querySelectorAll('#modelConfigContainer .model-toggle').forEach(toggle => {
-                toggle.addEventListener('change', function() {
+                toggle.addEventListener('change', function () {
                     const modelName = this.dataset.model;
                     const enabled = this.checked;
-                    
+
                     socket.emit('toggle-model', { modelName, enabled });
                 });
             });
-            
+
             document.querySelectorAll('#modelConfigContainer .update-url-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     const modelName = this.dataset.model;
                     const type = this.dataset.type;
                     const urlInput = document.querySelector(`.model-url[data-model="${modelName}"][data-type="${type}"]`);
-                    
+
                     updateModelUrl(modelName, urlInput.value, type);
                 });
             });
@@ -1263,17 +1374,17 @@
                 },
                 body: JSON.stringify({ modelName, url, type })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    alert('Error: ' + data.error);
-                } else {
-                    renderModelConfig(data.models);
-                }
-            })
-            .catch(error => {
-                alert('Error at updating URL: ' + error.message);
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert('Error: ' + data.error);
+                    } else {
+                        renderModelConfig(data.models);
+                    }
+                })
+                .catch(error => {
+                    alert('Error at updating URL: ' + error.message);
+                });
         }
 
         function readFileAsText(file) {
@@ -1285,83 +1396,154 @@
             });
         }
 
-        window.showPredictionDetails = function(index) {
+        window.showPredictionDetails = function (index) {
             const prediction = predictionHistory[index];
             if (prediction) {
-                document.getElementById('predictionDetailsContent').textContent = 
+                document.getElementById('predictionDetailsContent').textContent =
                     JSON.stringify(prediction.details, null, 2);
                 predictionDetailsModal.show();
             }
         };
 
-        // File preview. TODO: Show graph instead of text
-        function showFilePreview(fileName, content) {
+        // File preview with graph visualization
+        function showFilePreview(fileName, content, anomalyTime = null) {
+            // Store reference to any existing chart to destroy it
+            let chartInstance = window.signalChartInstance;
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
             document.getElementById('filePreviewTitle').textContent = fileName;
             document.getElementById('filePreviewContent').textContent = content;
+
+            // Parse the content
+            const lines = content.trim().split('\n');
+            const times = [];
+            const values = [];
+
+            lines.forEach(line => {
+                const parts = line.trim().split(/\s+/);
+                if (parts.length >= 2) {
+                    const time = parseFloat(parts[0]);
+                    const value = parseFloat(parts[1]);
+                    if (!isNaN(time) && !isNaN(value)) {
+                        times.push(time);
+                        values.push(value);
+                    }
+                }
+            });
+
+            // Create the chart
+            const ctx = document.getElementById('signalChart').getContext('2d');
+            window.signalChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: times,
+                    datasets: [{
+                        label: fileName,
+                        data: values,
+                        borderColor: 'rgb(75, 192, 192)',
+                        borderWidth: 1,
+                        pointRadius: 0,
+                        tension: 0.1,
+                        parsing: {
+                            xAxisKey: 'time',
+                            yAxisKey: 'value'
+                        }
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            title: {
+                                display: true,
+                                text: 'Time'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Signal Value'
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    }
+                }
+            });
+
+            // Show the modal
             filePreviewModal.show();
         }
 
         function parseDisruptionTimesFile(content) {
             const lines = content.trim().split('\n');
             const disruptions = {};
-            
+
             lines.forEach(line => {
                 const parts = line.trim().split(/\s+/);
                 if (parts.length >= 2) {
                     const dischargeId = parts[0].trim();
                     const anomalyTime = parseFloat(parts[1].trim());
-                    
+
                     // Only store times that are not 0 (disruptive)
                     if (!isNaN(anomalyTime) && anomalyTime > 0) {
                         disruptions[dischargeId] = anomalyTime;
                     }
                 }
             });
-            
+
             return disruptions;
         }
 
         function applyDisruptionTimesToDischarges(disruptions) {
             let appliedCount = 0;
-            
+
             discharges.forEach(discharge => {
                 if (discharge.files.length === 0) return;
-                
+
                 const firstFileName = discharge.files[0].name;
                 const match = firstFileName.match(/DES_(\d+)/i);
-                
+
                 if (match && match[1]) {
                     const dischargeId = match[1];
-                    
+
                     // If there is a disruption time for this ID, apply it
                     if (disruptions[dischargeId]) {
                         discharge.anomalyTime = disruptions[dischargeId];
-                        
+
                         // Update UI input
                         const inputElem = document.querySelector(`.anomaly-time-input[data-discharge-id="${discharge.id}"]`);
                         if (inputElem) {
                             inputElem.value = disruptions[dischargeId];
                         }
-                        
+
                         appliedCount++;
                     }
                 }
             });
-            
+
             return appliedCount;
         }
 
         // When DOM is ready
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             predictionDetailsModal = new bootstrap.Modal(document.getElementById('predictionDetailsModal'));
             configModal = new bootstrap.Modal(document.getElementById('configModal'));
             filePreviewModal = new bootstrap.Modal(document.getElementById('filePreviewModal'));
-            
-            document.getElementById('refreshBtn').addEventListener('click', function() {
+
+            document.getElementById('refreshBtn').addEventListener('click', function () {
                 socket.emit('request-health');
             });
 
-            document.getElementById('loadDisruptionTimesBtn').addEventListener('click', async function() {
+            document.getElementById('loadDisruptionTimesBtn').addEventListener('click', async function () {
                 const fileInput = document.getElementById('disruptionTimesFile');
                 if (!fileInput.files || fileInput.files.length === 0) {
                     alert('Select a file to load disruption times');
@@ -1372,7 +1554,7 @@
                     const content = await readFileAsText(fileInput.files[0]);
                     const disruptions = parseDisruptionTimesFile(content);
                     const appliedCount = applyDisruptionTimesToDischarges(disruptions);
-                    
+
                     updateJsonPreview();
                     alert(`${appliedCount} disruption times have been applied`);
                 } catch (error) {
@@ -1381,15 +1563,15 @@
             });
 
             // Event listener to download JSON
-            document.getElementById('downloadJsonBtn').addEventListener('click', function() {
+            document.getElementById('downloadJsonBtn').addEventListener('click', function () {
                 try {
                     const trainingData = processDischargesForTraining();
-                    
+
                     // Create file to download
                     const dataStr = JSON.stringify(trainingData, null, 2);
                     const blob = new Blob([dataStr], { type: 'application/json' });
                     const url = URL.createObjectURL(blob);
-                    
+
                     // Create download link and execute it
                     const downloadLink = document.createElement('a');
                     downloadLink.href = url;
@@ -1403,9 +1585,9 @@
                 }
             });
 
-            document.getElementById('sensorFilesInput').addEventListener('change', async function(e) {
+            document.getElementById('sensorFilesInput').addEventListener('change', async function (e) {
                 if (e.target.files.length === 0) return;
-                
+
                 try {
                     for (const file of e.target.files) {
                         const content = await readFileAsText(file);
@@ -1419,13 +1601,13 @@
                     alert('Error reading files: ' + error.message);
                 }
             });
-            
-            document.getElementById('processSensorFilesBtn').addEventListener('click', function() {
+
+            document.getElementById('processSensorFilesBtn').addEventListener('click', function () {
                 try {
                     const processedData = processSignalFiles(sensorFiles);
-                    
+
                     socket.emit('run-prediction', processedData);
-                    
+
                     document.getElementById('predictionResultContainer').style.display = 'block';
                     document.getElementById('predictionResult').innerHTML = `
                         <div class="text-center">
@@ -1446,12 +1628,12 @@
             });
 
             // Event listener for the add discharge button
-            document.getElementById('addDischargeBtn').addEventListener('click', function() {
+            document.getElementById('addDischargeBtn').addEventListener('click', function () {
                 addDischarge();
             });
 
             // Event listener for the toggle preview button
-            document.getElementById('togglePreviewBtn').addEventListener('click', function() {
+            document.getElementById('togglePreviewBtn').addEventListener('click', function () {
                 const previewContainer = document.getElementById('jsonPreviewContainer');
                 if (previewContainer.style.display === 'none') {
                     previewContainer.style.display = 'block';
@@ -1462,10 +1644,10 @@
             });
 
             // Event listener for processing discharges for training
-            document.getElementById('processDischargesBtn').addEventListener('click', function() {
+            document.getElementById('processDischargesBtn').addEventListener('click', function () {
                 try {
                     const trainingData = processDischargesForTraining();
-                    
+
                     fetch('/api/train', {
                         method: 'POST',
                         headers: {
@@ -1473,30 +1655,30 @@
                         },
                         body: JSON.stringify(trainingData)
                     })
-                    .then(response => response.json())
-                    .then(result => {
-                        document.getElementById('trainingResultContainer').style.display = 'block';
-                        
-                        if (result.error) {
-                            document.getElementById('trainingResult').className = 'alert alert-danger';
-                            document.getElementById('trainingResult').innerHTML = `Error: ${result.error}`;
-                        } else {
-                            document.getElementById('trainingResult').className = 'alert alert-success';
-                            document.getElementById('trainingResult').innerHTML = `
+                        .then(response => response.json())
+                        .then(result => {
+                            document.getElementById('trainingResultContainer').style.display = 'block';
+
+                            if (result.error) {
+                                document.getElementById('trainingResult').className = 'alert alert-danger';
+                                document.getElementById('trainingResult').innerHTML = `Error: ${result.error}`;
+                            } else {
+                                document.getElementById('trainingResult').className = 'alert alert-success';
+                                document.getElementById('trainingResult').innerHTML = `
                                 <h5>Entrenamiento iniciado</h5>
                                 <p>${result.message}</p>
                                 <p>Modelos exitosos: ${result.details.successful}</p>
                                 <p>Modelos fallidos: ${result.details.failed}</p>
                                 <p>Consulte los logs para más detalles.</p>
                             `;
-                        }
-                    })
-                    .catch(error => {
-                        document.getElementById('trainingResultContainer').style.display = 'block';
-                        document.getElementById('trainingResult').className = 'alert alert-danger';
-                        document.getElementById('trainingResult').innerHTML = `Error sending training data: ${error.message}`;
-                    });
-                    
+                            }
+                        })
+                        .catch(error => {
+                            document.getElementById('trainingResultContainer').style.display = 'block';
+                            document.getElementById('trainingResult').className = 'alert alert-danger';
+                            document.getElementById('trainingResult').innerHTML = `Error sending training data: ${error.message}`;
+                        });
+
                     document.getElementById('trainingResultContainer').style.display = 'block';
                     document.getElementById('trainingResult').innerHTML = `
                         <div class="text-center">
@@ -1514,9 +1696,9 @@
                 }
             });
 
-            document.getElementById('predictionFile').addEventListener('change', async function(e) {
+            document.getElementById('predictionFile').addEventListener('change', async function (e) {
                 if (e.target.files.length === 0) return;
-                
+
                 try {
                     const content = await readFileAsText(e.target.files[0]);
                     document.getElementById('testDataTextarea').value = content;
@@ -1525,9 +1707,9 @@
                 }
             });
 
-            document.getElementById('trainingFile').addEventListener('change', async function(e) {
+            document.getElementById('trainingFile').addEventListener('change', async function (e) {
                 if (e.target.files.length === 0) return;
-                
+
                 try {
                     const content = await readFileAsText(e.target.files[0]);
                     document.getElementById('trainingDataTextarea').value = content;
@@ -1536,12 +1718,12 @@
                 }
             });
 
-            document.getElementById('testPredictionBtn').addEventListener('click', function() {
+            document.getElementById('testPredictionBtn').addEventListener('click', function () {
                 const testDataElem = document.getElementById('testDataTextarea');
                 try {
                     const testData = JSON.parse(testDataElem.value);
                     socket.emit('run-prediction', testData);
-                    
+
                     document.getElementById('predictionResultContainer').style.display = 'block';
                     document.getElementById('predictionResult').innerHTML = `
                         <div class="text-center">
@@ -1559,7 +1741,7 @@
                 }
             });
 
-            document.getElementById('startTrainingBtn').addEventListener('click', function() {
+            document.getElementById('startTrainingBtn').addEventListener('click', function () {
                 const trainingDataElem = document.getElementById('trainingDataTextarea');
                 try {
                     const trainingData = JSON.parse(trainingDataElem.value);
@@ -1567,7 +1749,7 @@
                     if (!trainingData.discharges || !Array.isArray(trainingData.discharges)) {
                         throw new Error('The data must have a "discharges" array');
                     }
-                    
+
                     fetch('/api/train', {
                         method: 'POST',
                         headers: {
@@ -1575,29 +1757,29 @@
                         },
                         body: JSON.stringify(trainingData)
                     })
-                    .then(response => {
-                        if (!response.ok) {
-                            return response.json().then(err => { throw new Error(err.error || 'Error in the request'); });
-                        }
-                        return response.json();
-                    })
-                    .then(result => {
-                        document.getElementById('trainingResultContainer').style.display = 'block';
-                        document.getElementById('trainingResult').className = 'alert alert-success';
-                        document.getElementById('trainingResult').innerHTML = `
+                        .then(response => {
+                            if (!response.ok) {
+                                return response.json().then(err => { throw new Error(err.error || 'Error in the request'); });
+                            }
+                            return response.json();
+                        })
+                        .then(result => {
+                            document.getElementById('trainingResultContainer').style.display = 'block';
+                            document.getElementById('trainingResult').className = 'alert alert-success';
+                            document.getElementById('trainingResult').innerHTML = `
                             <h5>Training started</h5>
                             <p>${result.message}</p>
                             <p>Successful models: ${result.details.successful}</p>
                             <p>Failed models: ${result.details.failed}</p>
                             <p>Check the logs for more details.</p>
                         `;
-                    })
-                    .catch(error => {
-                        document.getElementById('trainingResultContainer').style.display = 'block';
-                        document.getElementById('trainingResult').className = 'alert alert-danger';
-                        document.getElementById('trainingResult').innerHTML = `Error: ${error.message}`;
-                    });
-                    
+                        })
+                        .catch(error => {
+                            document.getElementById('trainingResultContainer').style.display = 'block';
+                            document.getElementById('trainingResult').className = 'alert alert-danger';
+                            document.getElementById('trainingResult').innerHTML = `Error: ${error.message}`;
+                        });
+
                     document.getElementById('trainingResultContainer').style.display = 'block';
                     document.getElementById('trainingResult').innerHTML = `
                         <div class="text-center">
@@ -1615,46 +1797,46 @@
                 }
             });
 
-            document.getElementById('configModal').addEventListener('show.bs.modal', function() {
+            document.getElementById('configModal').addEventListener('show.bs.modal', function () {
                 fetch('/api/config')
-                .then(response => response.json())
-                .then(config => {
-                    renderModelConfig(config.models);
-                })
-                .catch(error => {
-                    document.getElementById('modelConfigContainer').innerHTML = `
+                    .then(response => response.json())
+                    .then(config => {
+                        renderModelConfig(config.models);
+                    })
+                    .catch(error => {
+                        document.getElementById('modelConfigContainer').innerHTML = `
                         <div class="alert alert-danger">
                             Error at loading configuration: ${error.message}
                         </div>
                     `;
-                });
+                    });
             });
         });
 
-        socket.on('health-update', function(status) {
+        socket.on('health-update', function (status) {
             const modelsContainer = document.getElementById('modelsContainer');
             modelsContainer.innerHTML = '';
-            
+
             for (const [name, modelStatus] of Object.entries(status)) {
                 modelsContainer.innerHTML += renderModel(name, modelStatus);
             }
 
             document.querySelectorAll('#modelsContainer .model-toggle').forEach(toggle => {
-                toggle.addEventListener('change', function() {
+                toggle.addEventListener('change', function () {
                     const modelName = this.dataset.model;
                     const enabled = this.checked;
-                    
+
                     socket.emit('toggle-model', { modelName, enabled });
                 });
             });
         });
 
-        socket.on('prediction-history', function(history) {
+        socket.on('prediction-history', function (history) {
             predictionHistory = history;
             renderPredictionHistory();
         });
 
-        socket.on('new-prediction', function(prediction) {
+        socket.on('new-prediction', function (prediction) {
             predictionHistory.unshift(prediction);
             if (predictionHistory.length > 100) {
                 predictionHistory.pop();
@@ -1662,9 +1844,9 @@
             renderPredictionHistory();
         });
 
-        socket.on('prediction-result', function(result) {
+        socket.on('prediction-result', function (result) {
             const resultContainer = document.getElementById('predictionResult');
-            
+
             if (result.voting.decision === null) {
                 resultContainer.className = 'alert alert-warning';
                 resultContainer.innerHTML = `
@@ -1685,7 +1867,7 @@
                     resultContainer.innerHTML = `
                         <h5>Detected class: UNKNOWN</h5>
                     `;
-                } 
+                }
 
                 resultContainer.innerHTML += `
                     <p>Confidence: ${(result.voting.confidence * 100).toFixed(1)}%</p>
@@ -1694,21 +1876,21 @@
             }
         });
 
-        socket.on('error', function(data) {
+        socket.on('error', function (data) {
             alert('Error: ' + data.message);
         });
 
-        socket.on('success', function(data) {
+        socket.on('success', function (data) {
             console.log('Success:', data.message);
         });
 
-        socket.on('config-update', function(config) {
+        socket.on('config-update', function (config) {
             config.models.forEach(model => {
                 const toggle = document.getElementById(`toggle-${model.name}`);
                 if (toggle) {
                     toggle.checked = model.enabled;
                 }
-                
+
                 const configToggle = document.getElementById(`config-toggle-${model.name}`);
                 if (configToggle) {
                     configToggle.checked = model.enabled;
@@ -1717,4 +1899,5 @@
         });
     </script>
 </body>
+
 </html>

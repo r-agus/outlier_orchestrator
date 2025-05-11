@@ -27,6 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(morgan('combined', { stream: logger.stream }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/node_modules/chart.js', express.static(path.join(__dirname, 'node_modules/chart.js')));
 
 // Routes
 app.use('/api', routes);
