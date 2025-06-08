@@ -199,7 +199,9 @@
 
         .collapse-indicator {
             transition: transform 0.3s ease;
-        }        .collapsed .collapse-indicator {
+        }
+
+        .collapsed .collapse-indicator {
             transform: rotate(-90deg);
         }
 
@@ -346,7 +348,8 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="training-tab" data-bs-toggle="tab" data-bs-target="#training"
                             type="button" role="tab" aria-controls="training" aria-selected="false">Training</button>
-                    </li>                    <li class="nav-item" role="presentation">
+                    </li>
+                    <li class="nav-item" role="presentation">
                         <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history"
                             type="button" role="tab" aria-controls="history" aria-selected="false">History</button>
                     </li>
@@ -601,7 +604,8 @@
                             </div>
                         </div>
                     </div>
-                </div>            </div>
+                </div>
+            </div>
 
             <!-- Preview Tab -->
             <div class="tab-pane fade" id="preview" role="tabpanel" aria-labelledby="preview-tab">
@@ -613,30 +617,37 @@
                             </div>
                             <div class="card-body">
                                 <div class="alert alert-info mb-3">
-                                    <strong>Preview Options:</strong> Visualize signals from your discharge data in different ways.
+                                    <strong>Preview Options:</strong> Visualize signals from your discharge data in
+                                    different ways.
                                 </div>
-                                
+
                                 <!-- Preview Mode Selection -->
                                 <div class="row mb-4">
                                     <div class="col-md-6">
-                                        <div class="card preview-selection-item" id="singleChartMode" style="cursor: pointer;">
+                                        <div class="card preview-selection-item" id="singleChartMode"
+                                            style="cursor: pointer;">
                                             <div class="card-body text-center">
                                                 <h5 class="card-title">Single Chart Mode</h5>
-                                                <p class="card-text">Plot signals from different discharges on one chart for comparison</p>
-                                                <button class="btn btn-primary" onclick="selectPreviewMode('single')">Select</button>
+                                                <p class="card-text">Plot signals from different discharges on one chart
+                                                    for comparison</p>
+                                                <button class="btn btn-primary"
+                                                    onclick="selectPreviewMode('single')">Select</button>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="card preview-selection-item" id="multipleChartsMode" style="cursor: pointer;">
+                                        <div class="card preview-selection-item" id="multipleChartsMode"
+                                            style="cursor: pointer;">
                                             <div class="card-body text-center">
                                                 <h5 class="card-title">Multiple Charts Mode</h5>
-                                                <p class="card-text">Plot all signals from one discharge on separate charts</p>
-                                                <button class="btn btn-primary" onclick="selectPreviewMode('multiple')">Select</button>
+                                                <p class="card-text">Plot all signals from one discharge on separate
+                                                    charts</p>
+                                                <button class="btn btn-primary"
+                                                    onclick="selectPreviewMode('multiple')">Select</button>
                                             </div>
                                         </div>
                                     </div>
-                                </div>                                <!-- Single Chart Mode Interface -->
+                                </div> <!-- Single Chart Mode Interface -->
                                 <div id="singleChartInterface" class="preview-interface" style="display: none;">
                                     <h6>Single Chart Mode - Signal Comparison</h6>
                                     <div class="row">
@@ -647,19 +658,25 @@
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="mb-3">
-                                                        <label for="singleModeFiles" class="form-label">Select signal files (.txt):</label>
-                                                        <input type="file" class="form-control" id="singleModeFiles" multiple accept=".txt" onchange="loadSingleModeFiles()">
-                                                        <small class="form-text text-muted">Select multiple .txt files to compare</small>
+                                                        <label for="singleModeFiles" class="form-label">Select signal
+                                                            files (.txt):</label>
+                                                        <input type="file" class="form-control" id="singleModeFiles"
+                                                            multiple accept=".txt" onchange="loadSingleModeFiles()">
+                                                        <small class="form-text text-muted">Select multiple .txt files
+                                                            to compare</small>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label class="form-label">Loaded Files:</label>
-                                                        <div id="singleModeFilesList" class="overflow-auto" style="max-height: 200px; border: 1px solid #dee2e6; padding: 10px; border-radius: 4px;">
+                                                        <div id="singleModeFilesList" class="overflow-auto"
+                                                            style="max-height: 200px; border: 1px solid #dee2e6; padding: 10px; border-radius: 4px;">
                                                             <small class="text-muted">No files loaded</small>
                                                         </div>
                                                     </div>
                                                     <div class="d-grid gap-2">
-                                                        <button class="btn btn-success" onclick="plotSingleChart()" id="plotSingleBtn" disabled>Plot Comparison Chart</button>
-                                                        <button class="btn btn-secondary" onclick="clearSingleChart()">Clear Chart</button>
+                                                        <button class="btn btn-success" onclick="plotSingleChart()"
+                                                            id="plotSingleBtn" disabled>Plot Comparison Chart</button>
+                                                        <button class="btn btn-secondary"
+                                                            onclick="clearSingleChart()">Clear Chart</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -690,19 +707,25 @@
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="mb-3">
-                                                        <label for="multipleModeFiles" class="form-label">Select signal files (.txt):</label>
-                                                        <input type="file" class="form-control" id="multipleModeFiles" multiple accept=".txt" onchange="loadMultipleModeFiles()">
-                                                        <small class="form-text text-muted">Select multiple .txt files to plot separately</small>
+                                                        <label for="multipleModeFiles" class="form-label">Select signal
+                                                            files (.txt):</label>
+                                                        <input type="file" class="form-control" id="multipleModeFiles"
+                                                            multiple accept=".txt" onchange="loadMultipleModeFiles()">
+                                                        <small class="form-text text-muted">Select multiple .txt files
+                                                            to plot separately</small>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label class="form-label">Loaded Files:</label>
-                                                        <div id="multipleModeFilesList" class="overflow-auto" style="max-height: 200px;">
+                                                        <div id="multipleModeFilesList" class="overflow-auto"
+                                                            style="max-height: 200px;">
                                                             <small class="text-muted">No files loaded</small>
                                                         </div>
                                                     </div>
                                                     <div class="d-grid gap-2">
-                                                        <button class="btn btn-success" onclick="plotMultipleCharts()" id="plotMultipleBtn" disabled>Plot All Charts</button>
-                                                        <button class="btn btn-secondary" onclick="clearMultipleCharts()">Clear Charts</button>
+                                                        <button class="btn btn-success" onclick="plotMultipleCharts()"
+                                                            id="plotMultipleBtn" disabled>Plot All Charts</button>
+                                                        <button class="btn btn-secondary"
+                                                            onclick="clearMultipleCharts()">Clear Charts</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -715,7 +738,8 @@
                                                 <div class="card-body">
                                                     <div id="multipleChartsContainer" class="chart-grid">
                                                         <div class="text-center text-muted">
-                                                            <p>Upload signal files and click "Plot All Charts" to view them</p>
+                                                            <p>Upload signal files and click "Plot All Charts" to view
+                                                                them</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2031,39 +2055,40 @@
                         </div>
                     `;
                     });
-            });        });        // Preview Tab Functions
+            });
+        });        // Preview Tab Functions
         let currentPreviewMode = null;
         let selectedSignalsForComparison = [];
         let selectedSignalsForMultiple = [];
         let singleComparisonChart = null;
-        let multipleChartsArray = [];function selectPreviewMode(mode) {
+        let multipleChartsArray = []; function selectPreviewMode(mode) {
             currentPreviewMode = mode;
-            
+
             // Hide all interfaces
             document.getElementById('singleChartInterface').style.display = 'none';
             document.getElementById('multipleChartsInterface').style.display = 'none';
-            
+
             // Show selected interface
             if (mode === 'single') {
                 document.getElementById('singleChartInterface').style.display = 'block';
             } else if (mode === 'multiple') {
                 document.getElementById('multipleChartsInterface').style.display = 'block';
             }
-            
+
             // Update UI selection
             document.querySelectorAll('.preview-selection-item').forEach(item => {
                 item.classList.remove('border-primary');
             });
-            
+
             if (mode === 'single') {
                 document.getElementById('singleChartMode').classList.add('border-primary');
             } else {
                 document.getElementById('multipleChartsMode').classList.add('border-primary');
             }
-        }function parseSignalData(content) {
+        } function parseSignalData(content) {
             const lines = content.split('\n').filter(line => line.trim());
             const data = [];
-            
+
             for (const line of lines) {
                 const parts = line.trim().split(/\s+/);
                 if (parts.length >= 2) {
@@ -2074,20 +2099,20 @@
                     }
                 }
             }
-            
+
             return data;
         }
 
         function plotSingleChart() {
             if (selectedSignalsForComparison.length === 0) return;
-            
+
             const ctx = document.getElementById('singleComparisonChart').getContext('2d');
-            
+
             // Destroy existing chart
             if (singleComparisonChart) {
                 singleComparisonChart.destroy();
             }
-            
+
             const datasets = selectedSignalsForComparison.map((signal, index) => {
                 const data = parseSignalData(signal.content);
                 const colors = [
@@ -2100,7 +2125,7 @@
                     'rgb(199, 199, 199)',
                     'rgb(83, 102, 147)'
                 ];
-                
+
                 return {
                     label: signal.name,
                     data: data,
@@ -2111,7 +2136,7 @@
                     pointRadius: 0
                 };
             });
-            
+
             singleComparisonChart = new Chart(ctx, {
                 type: 'line',
                 data: { datasets: datasets },
@@ -2157,7 +2182,7 @@
                 singleComparisonChart.destroy();
                 singleComparisonChart = null;
             }
-            
+
             // Clear file input and selections
             document.getElementById('singleModeFiles').value = '';
             selectedSignalsForComparison.length = 0;
@@ -2167,13 +2192,13 @@
 
         function plotMultipleCharts() {
             if (selectedSignalsForMultiple.length === 0) return;
-            
+
             // Clear existing charts only (not the data)
             multipleChartsArray.forEach(chart => chart.destroy());
             multipleChartsArray.length = 0;
-            
+
             const container = document.getElementById('multipleChartsContainer');
-            
+
             // Determine grid class based on number of charts
             let gridClass = 'chart-grid ';
             if (selectedSignalsForMultiple.length === 1) {
@@ -2187,10 +2212,10 @@
             } else {
                 gridClass += 'multiple-charts-more';
             }
-            
+
             container.className = gridClass;
             container.innerHTML = '';
-            
+
             selectedSignalsForMultiple.forEach((signal, index) => {
                 const chartDiv = document.createElement('div');
                 chartDiv.className = 'chart-container-preview';
@@ -2199,11 +2224,11 @@
                     <canvas id="multiChart_${index}"></canvas>
                 `;
                 container.appendChild(chartDiv);
-                
+
                 // Create chart
                 const ctx = document.getElementById(`multiChart_${index}`).getContext('2d');
                 const data = parseSignalData(signal.content);
-                
+
                 const chart = new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -2247,7 +2272,7 @@
                         }
                     }
                 });
-                
+
                 multipleChartsArray.push(chart);
             });
         }
@@ -2256,13 +2281,13 @@
             // Destroy all existing charts
             multipleChartsArray.forEach(chart => chart.destroy());
             multipleChartsArray.length = 0;
-            
+
             // Clear file input and selections
             document.getElementById('multipleModeFiles').value = '';
             selectedSignalsForMultiple.length = 0;
             updateMultipleModeDisplay();
             document.getElementById('plotMultipleBtn').disabled = true;
-            
+
             // Clear container
             const container = document.getElementById('multipleChartsContainer');
             container.className = 'chart-grid';
@@ -2271,30 +2296,30 @@
                     <p>Upload signal files and click "Plot All Charts" to view them</p>
                 </div>
             `;
-        }        
-        
+        }
+
         // File loading functions for Preview tab
         function loadSingleModeFiles() {
             const input = document.getElementById('singleModeFiles');
             const files = Array.from(input.files);
-            
+
             if (files.length === 0) {
                 return;
             }
 
             selectedSignalsForComparison.length = 0; // Clear previous selections
-            
+
             files.forEach(file => {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     selectedSignalsForComparison.push({
                         name: file.name,
                         content: e.target.result
                     });
-                    
+
                     // Update display
                     updateSingleModeDisplay();
-                    
+
                     // If this is the last file, plot the chart
                     if (selectedSignalsForComparison.length === files.length) {
                         document.getElementById('plotSingleBtn').disabled = false;
@@ -2307,24 +2332,24 @@
         function loadMultipleModeFiles() {
             const input = document.getElementById('multipleModeFiles');
             const files = Array.from(input.files);
-            
+
             if (files.length === 0) {
                 return;
             }
 
             selectedSignalsForMultiple.length = 0; // Clear previous selections
-            
+
             files.forEach(file => {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     selectedSignalsForMultiple.push({
                         name: file.name,
                         content: e.target.result
                     });
-                    
+
                     // Update display
                     updateMultipleModeDisplay();
-                    
+
                     // If this is the last file, enable the plot button
                     if (selectedSignalsForMultiple.length === files.length) {
                         document.getElementById('plotMultipleBtn').disabled = false;
@@ -2337,13 +2362,13 @@
         function updateSingleModeDisplay() {
             const container = document.getElementById('singleModeFilesList');
             if (!container) return;
-            
+
             if (selectedSignalsForComparison.length === 0) {
                 container.innerHTML = '<small class="text-muted">No files loaded</small>';
                 return;
             }
-            
-            container.innerHTML = selectedSignalsForComparison.map(signal => 
+
+            container.innerHTML = selectedSignalsForComparison.map(signal =>
                 `<div class="badge bg-primary me-1 mb-1">${signal.name}</div>`
             ).join('');
         }
@@ -2351,13 +2376,13 @@
         function updateMultipleModeDisplay() {
             const container = document.getElementById('multipleModeFilesList');
             if (!container) return;
-            
+
             if (selectedSignalsForMultiple.length === 0) {
                 container.innerHTML = '<small class="text-muted">No files loaded</small>';
                 return;
             }
-            
-            container.innerHTML = selectedSignalsForMultiple.map(signal => 
+
+            container.innerHTML = selectedSignalsForMultiple.map(signal =>
                 `<div class="badge bg-info me-1 mb-1">${signal.name}</div>`
             ).join('');
         }
