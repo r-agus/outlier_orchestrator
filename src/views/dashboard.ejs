@@ -207,8 +207,9 @@
 
         .chart-grid {
             display: grid;
-            gap: 20px;
+            gap: 25px;
             margin-top: 20px;
+            padding: 10px 0;
         }
 
         .chart-grid.single-chart {
@@ -224,31 +225,229 @@
         }
 
         .chart-grid.multiple-charts-3 {
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: 1fr;
         }
 
         .chart-grid.multiple-charts-4 {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1fr;
         }
 
         .chart-grid.multiple-charts-more {
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: 1fr;
         }
 
         .chart-container-preview {
             position: relative;
-            height: 300px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 10px;
+            height: 400px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        .chart-container-preview:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
         }
 
         .chart-title {
             text-align: center;
-            font-weight: bold;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #495057;
+            font-size: 16px;
+            padding: 10px 0;
+            border-bottom: 2px solid #dee2e6;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 4px 4px 0 0;
+            margin: -20px -20px 15px -20px;
+            padding: 15px 20px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 10px;
-            color: #333;
+            padding: 5px 0;
+        }
+
+        .chart-header .chart-title {
+            margin-bottom: 0;
+            flex: 1;
+            text-align: left;
+        }
+
+        .fullscreen-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .fullscreen-btn:hover {
+            background: #0056b3;
+        }
+
+        .fullscreen-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+        }
+
+        .fullscreen-modal-header {
+            background: #333;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .fullscreen-modal-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .fullscreen-close-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .fullscreen-close-btn:hover {
+            background: #c82333;
+        }
+
+        .fullscreen-chart-container {
+            flex: 1;
+            padding: 20px;
+            position: relative;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .fullscreen-single-chart {
+            flex: 1;
+            min-height: 0;
+        }
+
+        .fullscreen-multiple-charts {
+            display: grid;
+            gap: 20px;
+            height: 100%;
+            align-content: stretch;
+        }
+
+        .fullscreen-multiple-charts.charts-1 {
+            grid-template-columns: 1fr;
+        }
+
+        .fullscreen-multiple-charts.charts-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .fullscreen-multiple-charts.charts-3 {
+            grid-template-columns: 1fr;
+        }
+
+        .fullscreen-multiple-charts.charts-4 {
+            grid-template-columns: 1fr;
+        }
+
+        .fullscreen-multiple-charts.charts-more {
+            grid-template-columns: 1fr;
+        }
+
+        .fullscreen-chart-item {
+            position: relative;
+            background: rgba(248, 249, 250, 0.95);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(222, 226, 230, 0.5);
+            min-height: 400px;
+        }
+
+        .fullscreen-chart-title {
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #495057;
+            font-size: 16px;
+            flex-shrink: 0;
+            padding: 15px 20px;
+            border-bottom: 2px solid rgba(222, 226, 230, 0.6);
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 4px 4px 0 0;
+            margin: -20px -20px 15px -20px;
+        }
+
+        .fullscreen-chart-item canvas {
+            flex: 1;
+            width: 100% !important;
+            min-height: 300px !important;
+        }
+
+        /* Responsive fullscreen layouts */
+        @media (max-width: 1200px) {
+            .fullscreen-multiple-charts.charts-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .fullscreen-multiple-charts.charts-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-grid.multiple-charts-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .fullscreen-chart-item {
+                padding: 15px;
+                min-height: 250px;
+            }
+
+            .chart-container-preview {
+                height: 300px;
+                padding: 15px;
+            }
+
+            .chart-title {
+                font-size: 14px;
+                margin: -15px -15px 15px -15px;
+                padding: 12px 15px;
+            }
+
+            .fullscreen-modal-header {
+                padding: 10px 15px;
+            }
+
+            .fullscreen-modal-title {
+                font-size: 16px;
+            }
         }
 
         .preview-selection-item {
@@ -683,10 +882,20 @@
                                         </div>
                                         <div class="col-md-8">
                                             <div class="card">
-                                                <div class="card-header">
-                                                    <h6 class="mb-0">Chart Visualization</h6>
+                                                <div
+                                                    class="card-header d-flex justify-content-between align-items-center">
+                                                    <h6 class="mb-0">Chart Visualization</h6> <button
+                                                        class="btn btn-sm btn-outline-secondary fullscreen-btn"
+                                                        id="singleChartFullscreenBtn"
+                                                        onclick="openSingleChartFullscreen()" disabled>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                            fill="currentColor" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z" />
+                                                        </svg>
+                                                    </button>
                                                 </div>
-                                                <div class="card-body">
+                                                <div class="card-body" style="background-color: #f8f9fa;">
                                                     <div class="chart-container-preview">
                                                         <canvas id="singleComparisonChart"></canvas>
                                                     </div>
@@ -732,10 +941,20 @@
                                         </div>
                                         <div class="col-md-9">
                                             <div class="card">
-                                                <div class="card-header">
+                                                <div
+                                                    class="card-header d-flex justify-content-between align-items-center">
                                                     <h6 class="mb-0">Signal Charts</h6>
+                                                    <button class="btn btn-sm btn-outline-secondary fullscreen-btn"
+                                                        id="multipleChartsFullscreenBtn"
+                                                        onclick="openMultipleChartsFullscreen()" disabled>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                            fill="currentColor" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z" />
+                                                        </svg>
+                                                    </button>
                                                 </div>
-                                                <div class="card-body">
+                                                <div class="card-body" style="background-color: #f8f9fa;">
                                                     <div id="multipleChartsContainer" class="chart-grid">
                                                         <div class="text-center text-muted">
                                                             <p>Upload signal files and click "Plot All Charts" to view
@@ -826,6 +1045,22 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div> <!-- Fullscreen Chart Modal -->
+    <div id="fullscreenModal" class="fullscreen-modal">
+        <div class="fullscreen-modal-header">
+            <div class="fullscreen-modal-title" id="fullscreenChartTitle">Chart Fullscreen View</div>
+            <button class="fullscreen-close-btn" onclick="closeFullscreenChart()">Close</button>
+        </div>
+        <div class="fullscreen-chart-container">
+            <!-- Single chart container -->
+            <div id="fullscreenSingleChart" class="fullscreen-single-chart" style="display: none;">
+                <canvas id="fullscreenChart"></canvas>
+            </div>
+            <!-- Multiple charts container -->
+            <div id="fullscreenMultipleCharts" class="fullscreen-multiple-charts" style="display: none;">
+                <!-- Multiple charts will be added here dynamically -->
             </div>
         </div>
     </div>
@@ -2167,17 +2402,17 @@
                         legend: {
                             display: true,
                             position: 'top'
-                        },
-                        tooltip: {
+                        }, tooltip: {
                             mode: 'index',
                             intersect: false,
                         }
                     }
                 }
             });
-        }
 
-        function clearSingleChart() {
+            // Enable fullscreen button
+            document.getElementById('singleChartFullscreenBtn').disabled = false;
+        } function clearSingleChart() {
             if (singleComparisonChart) {
                 singleComparisonChart.destroy();
                 singleComparisonChart = null;
@@ -2188,6 +2423,9 @@
             selectedSignalsForComparison.length = 0;
             updateSingleModeDisplay();
             document.getElementById('plotSingleBtn').disabled = true;
+
+            // Disable fullscreen button
+            document.getElementById('singleChartFullscreenBtn').disabled = true;
         }
 
         function plotMultipleCharts() {
@@ -2214,9 +2452,7 @@
             }
 
             container.className = gridClass;
-            container.innerHTML = '';
-
-            selectedSignalsForMultiple.forEach((signal, index) => {
+            container.innerHTML = ''; selectedSignalsForMultiple.forEach((signal, index) => {
                 const chartDiv = document.createElement('div');
                 chartDiv.className = 'chart-container-preview';
                 chartDiv.innerHTML = `
@@ -2271,22 +2507,24 @@
                             }
                         }
                     }
-                });
-
-                multipleChartsArray.push(chart);
+                }); multipleChartsArray.push(chart);
             });
+
+            // Enable fullscreen button
+            document.getElementById('multipleChartsFullscreenBtn').disabled = false;
         }
 
         function clearMultipleCharts() {
             // Destroy all existing charts
             multipleChartsArray.forEach(chart => chart.destroy());
-            multipleChartsArray.length = 0;
-
-            // Clear file input and selections
+            multipleChartsArray.length = 0;            // Clear file input and selections
             document.getElementById('multipleModeFiles').value = '';
             selectedSignalsForMultiple.length = 0;
             updateMultipleModeDisplay();
             document.getElementById('plotMultipleBtn').disabled = true;
+
+            // Disable fullscreen button
+            document.getElementById('multipleChartsFullscreenBtn').disabled = true;
 
             // Clear container
             const container = document.getElementById('multipleChartsContainer');
@@ -2380,12 +2618,179 @@
             if (selectedSignalsForMultiple.length === 0) {
                 container.innerHTML = '<small class="text-muted">No files loaded</small>';
                 return;
-            }
-
-            container.innerHTML = selectedSignalsForMultiple.map(signal =>
+            } container.innerHTML = selectedSignalsForMultiple.map(signal =>
                 `<div class="badge bg-info me-1 mb-1">${signal.name}</div>`
             ).join('');
+        }        // Fullscreen functionality
+        let fullscreenChart = null;
+        let fullscreenMultipleCharts = [];
+
+        function openSingleChartFullscreen() {
+            if (!singleComparisonChart) return;
+
+            const modal = document.getElementById('fullscreenModal');
+            const title = document.getElementById('fullscreenChartTitle');
+            const singleContainer = document.getElementById('fullscreenSingleChart');
+            const multipleContainer = document.getElementById('fullscreenMultipleCharts');
+            const canvas = document.getElementById('fullscreenChart');
+
+            // Show single chart container, hide multiple
+            singleContainer.style.display = 'flex';
+            multipleContainer.style.display = 'none';
+
+            title.textContent = 'Signal Comparison Chart - Fullscreen View';
+            modal.style.display = 'flex';
+
+            // Destroy existing fullscreen chart
+            if (fullscreenChart) {
+                fullscreenChart.destroy();
+            }
+
+            // Clone the chart data from single comparison chart
+            const originalData = singleComparisonChart.data;
+            const originalOptions = singleComparisonChart.options;
+
+            // Create new chart in fullscreen
+            const ctx = canvas.getContext('2d');
+            fullscreenChart = new Chart(ctx, {
+                type: 'line',
+                data: JSON.parse(JSON.stringify(originalData)),
+                options: {
+                    ...JSON.parse(JSON.stringify(originalOptions)),
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
         }
+
+        function openMultipleChartsFullscreen() {
+            if (selectedSignalsForMultiple.length === 0) return;
+
+            const modal = document.getElementById('fullscreenModal');
+            const title = document.getElementById('fullscreenChartTitle');
+            const singleContainer = document.getElementById('fullscreenSingleChart');
+            const multipleContainer = document.getElementById('fullscreenMultipleCharts');
+
+            // Show multiple charts container, hide single
+            singleContainer.style.display = 'none';
+            multipleContainer.style.display = 'grid';
+
+            title.textContent = 'Multiple Signal Charts - Fullscreen View';
+            modal.style.display = 'flex';
+
+            // Clear existing fullscreen charts
+            fullscreenMultipleCharts.forEach(chart => chart.destroy());
+            fullscreenMultipleCharts.length = 0;
+
+            // Determine grid class based on number of charts
+            let gridClass = 'fullscreen-multiple-charts ';
+            if (selectedSignalsForMultiple.length === 1) {
+                gridClass += 'charts-1';
+            } else if (selectedSignalsForMultiple.length === 2) {
+                gridClass += 'charts-2';
+            } else if (selectedSignalsForMultiple.length === 3) {
+                gridClass += 'charts-3';
+            } else if (selectedSignalsForMultiple.length === 4) {
+                gridClass += 'charts-4';
+            } else {
+                gridClass += 'charts-more';
+            }
+
+            multipleContainer.className = gridClass;
+            multipleContainer.innerHTML = '';
+
+            selectedSignalsForMultiple.forEach((signal, index) => {
+                const chartDiv = document.createElement('div');
+                chartDiv.className = 'fullscreen-chart-item';
+                chartDiv.innerHTML = `
+                    <div class="fullscreen-chart-title">${signal.name}</div>
+                    <canvas id="fullscreenMultiChart_${index}"></canvas>
+                `;
+                multipleContainer.appendChild(chartDiv);
+
+                // Create chart
+                const ctx = document.getElementById(`fullscreenMultiChart_${index}`).getContext('2d');
+                const data = parseSignalData(signal.content);
+
+                const chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: [{
+                            label: signal.name,
+                            data: data,
+                            borderColor: 'rgb(75, 192, 192)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            fill: false,
+                            tension: 0.1,
+                            pointRadius: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                title: {
+                                    display: true,
+                                    text: 'Time'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Signal Value'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            }
+                        }
+                    }
+                });
+
+                fullscreenMultipleCharts.push(chart);
+            });
+        }
+
+        function closeFullscreenChart() {
+            const modal = document.getElementById('fullscreenModal');
+            modal.style.display = 'none';
+
+            // Clean up single chart
+            if (fullscreenChart) {
+                fullscreenChart.destroy();
+                fullscreenChart = null;
+            }
+
+            // Clean up multiple charts
+            fullscreenMultipleCharts.forEach(chart => chart.destroy());
+            fullscreenMultipleCharts.length = 0;
+
+            // Clear containers
+            document.getElementById('fullscreenSingleChart').style.display = 'none';
+            document.getElementById('fullscreenMultipleCharts').style.display = 'none';
+        }// Close fullscreen on Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeFullscreenChart();
+            }
+        });
+
+        // Close fullscreen when clicking outside the modal content
+        document.getElementById('fullscreenModal').addEventListener('click', function (event) {
+            if (event.target === this) {
+                closeFullscreenChart();
+            }
+        });
     </script>
 </body>
 
