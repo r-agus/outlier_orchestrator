@@ -2011,6 +2011,73 @@
             });
 
             return appliedCount;
+        }        // Socket event listeners
+        socket.on('health-update', function(modelStatus) {
+            renderModels(modelStatus);
+        });
+
+        socket.on('prediction-result', function(result) {
+            document.getElementById('predictionResultContainer').style.display = 'block';
+            if (result.error) {
+                document.getElementById('predictionResult').className = 'alert alert-danger';
+                document.getElementById('predictionResult').innerHTML = `Error: ${result.error}`;
+            } else {
+                document.getElementById('predictionResult').className = 'alert alert-success';
+                document.getElementById('predictionResult').innerHTML = `
+                    <h5>Prediction Result</h5>
+                    <p><strong>Decision:</strong> ${result.voting.decision}</p>
+                    <p><strong>Confidence:</strong> ${(result.voting.confidence * 100).toFixed(1)}%</p>
+                    <p><strong>Individual Votes:</strong> ${JSON.stringify(result.voting.votes)}</p>
+                `;
+            }
+        });
+
+        socket.on('new-prediction', function(prediction) {
+            predictionHistory.unshift(prediction);
+            if (predictionHistory.length > 100) {
+                predictionHistory.pop();
+            }
+            renderPredictionHistory();
+        });        socket.on('prediction-history', function(history) {
+            predictionHistory = history;
+            renderPredictionHistory();
+        });
+
+        socket.on('config-update', function(data) {
+            console.log('Configuration updated:', data);
+            // Refresh model status after configuration change
+            socket.emit('request-health');
+        });
+
+        socket.on('success', function(data) {
+            console.log('Success:', data.message);
+            // You can add a toast notification here if desired
+        });
+
+        socket.on('error', function(data) {
+            console.error('Socket error:', data.message);
+            // You can add error handling/notification here if desired
+        });
+
+        // Function to render all models
+        function renderModels(modelStatus) {
+            const container = document.getElementById('modelsContainer');
+            let html = '';
+            
+            for (const [modelName, status] of Object.entries(modelStatus)) {
+                html += renderModel(modelName, status);
+            }
+            
+            container.innerHTML = html;
+            
+            // Add event listeners to model toggles
+            container.querySelectorAll('.model-toggle').forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    const modelName = this.dataset.model;
+                    const enabled = this.checked;
+                    socket.emit('toggle-model', { modelName, enabled });
+                });
+            });
         }
 
         // When DOM is ready
