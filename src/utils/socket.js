@@ -7,11 +7,10 @@ const orchestratorService = require('../services/orchestrator.service');
  */
 module.exports = function(io) {
   // Mantener registro del estado de los modelos
-  const modelStatus = {
-    svm: { status: 'unknown', lastCheck: null },
-    lstm: { status: 'unknown', lastCheck: null },
-    xgboost: { status: 'unknown', lastCheck: null }
-  };
+  const modelStatus = {};
+  Object.keys(orchestratorService.models).forEach(name => {
+    modelStatus[name] = { status: 'unknown', lastCheck: null };
+  });
 
   // Registro de predicciones realizadas
   const predictionLog = [];

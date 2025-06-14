@@ -524,8 +524,9 @@
         <div class="row mb-4">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        Model Status
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <span>Model Status</span>
+                        <button class="btn btn-light btn-sm" id="addModelBtn">Add Model</button>
                     </div>
                     <div class="card-body">
                         <div class="models-row" id="modelsContainer">
@@ -1080,6 +1081,7 @@
         // Array of training downloads. Each download has: id, files[], anomalyTime
         let discharges = [];
         let dischargeCounter = 0;
+        let modelDisplayNames = {};
 
         function formatDate(date) {
             const d = new Date(date);
@@ -1103,11 +1105,13 @@
 
             const lastCheck = status.lastCheck ? formatDate(status.lastCheck) : 'Never';
 
+            const displayName = modelDisplayNames[name] || name;
+
             return `
                 <div class="model-col">
                     <div class="card model-card">
                         <div class="card-body">
-                            <h5 class="card-title">${name.toUpperCase()}</h5>
+                            <h5 class="card-title editable-name" data-model="${name}" contenteditable="true">${displayName}</h5>
                             <p class="model-status ${statusClass}">${statusText}</p>
                             <p class="card-text">
                                 <small class="text-muted">Last check: ${lastCheck}</small>
@@ -1769,7 +1773,7 @@
                 html += `
                     <div class="card mb-3">
                         <div class="card-header">
-                            <h5 class="mb-0">${model.name.toUpperCase()}</h5>
+                            <h5 class="mb-0">${(model.displayName || model.name).toUpperCase()}</h5>
                         </div>
                         <div class="card-body">
                             <div class="form-check form-switch mb-3">
@@ -2069,13 +2073,39 @@
             }
             
             container.innerHTML = html;
-            
+
             // Add event listeners to model toggles
             container.querySelectorAll('.model-toggle').forEach(toggle => {
                 toggle.addEventListener('change', function() {
                     const modelName = this.dataset.model;
                     const enabled = this.checked;
                     socket.emit('toggle-model', { modelName, enabled });
+                });
+            });
+
+            // Add event listeners to editable names
+            container.querySelectorAll('.editable-name').forEach(span => {
+                span.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.blur();
+                    }
+                });
+
+                span.addEventListener('blur', function() {
+                    const modelName = this.dataset.model;
+                    const newName = this.textContent.trim();
+                    if (newName && modelDisplayNames[modelName] !== newName) {
+                        fetch('/api/config/model/name', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ modelName, displayName: newName })
+                        })
+                        .then(res => res.json())
+                        .then(() => {
+                            modelDisplayNames[modelName] = newName;
+                        });
+                    }
                 });
             });
         }
@@ -2085,6 +2115,38 @@
             predictionDetailsModal = new bootstrap.Modal(document.getElementById('predictionDetailsModal'));
             configModal = new bootstrap.Modal(document.getElementById('configModal'));
             filePreviewModal = new bootstrap.Modal(document.getElementById('filePreviewModal'));
+
+            fetch('/api/config')
+                .then(response => response.json())
+                .then(cfg => {
+                    cfg.models.forEach(m => {
+                        modelDisplayNames[m.name] = m.displayName || m.name;
+                    });
+                });
+
+            document.getElementById('addModelBtn').addEventListener('click', async function () {
+                const name = prompt('Model name:');
+                if (!name) return;
+                const url = prompt('Prediction URL:');
+                if (!url) return;
+                const trainingUrl = prompt('Training URL:');
+                if (!trainingUrl) return;
+                const healthUrl = prompt('Health URL:');
+                if (!healthUrl) return;
+
+                await fetch('/api/config/model/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, url, trainingUrl, healthUrl })
+                });
+
+                const cfg = await fetch('/api/config').then(r => r.json());
+                modelDisplayNames = {};
+                cfg.models.forEach(m => {
+                    modelDisplayNames[m.name] = m.displayName || m.name;
+                });
+                socket.emit('request-health');
+            });
 
             document.getElementById('refreshBtn').addEventListener('click', function () {
                 socket.emit('request-health');
