@@ -1671,6 +1671,7 @@
                     let commonTimes = null;
                     let firstFileTimes = null;
                     let allSameTime = true;
+                    const values = [];
 
                     // Process first all times to check if they are common
                     discharge.files.forEach((file, index) => {
@@ -1684,11 +1685,7 @@
                                 const value = parseFloat(parts[1]);
 
                                 if (!isNaN(time) && !isNaN(value)) {
-                                    // If we don't have common times, store the times per file
-                                    if (!allSameTime) {
-                                        times.push(time);
-                                    }
-                                    values.push(value);
+                                    times.push(time);
                                 }
                             }
                         }
