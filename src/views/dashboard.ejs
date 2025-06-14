@@ -2025,7 +2025,7 @@
                 document.getElementById('predictionResult').className = 'alert alert-success';
                 document.getElementById('predictionResult').innerHTML = `
                     <h5>Prediction Result</h5>
-                    <p><strong>Decision:</strong> ${result.voting.decision}</p>
+                    <p><strong>Decision:</strong> ${result.voting.decision === 0 ? 'Normal' : 'Anomaly'}</p>
                     <p><strong>Confidence:</strong> ${(result.voting.confidence * 100).toFixed(1)}%</p>
                     <p><strong>Individual Votes:</strong> ${JSON.stringify(result.voting.votes)}</p>
                 `;
