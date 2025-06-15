@@ -18,5 +18,6 @@ router.post('/config/model', validateModelConfig, orchestratorController.updateM
 router.post('/config/url', orchestratorController.updateModelUrl);
 router.post('/config/model/name', orchestratorController.updateModelName);
 router.post('/config/model/add', orchestratorController.addModel);
+router.post('/config/model/delete', orchestratorController.deleteModel);
 
 module.exports = router;

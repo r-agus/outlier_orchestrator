@@ -1108,18 +1108,27 @@
             const displayName = modelDisplayNames[name] || name;
 
             return `
-                <div class="model-col">
-                    <div class="card model-card">
+                <div class="model-col" id="model-col-${name}">
+                    <div class="card model-card" id="model-card-${name}">
                         <div class="card-body">
-                            <h5 class="card-title editable-name" data-model="${name}" contenteditable="true">${displayName}</h5>
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5 class="card-title m-0">
+                                    <span class="editable-name" data-model="${name}" contenteditable="true">${displayName}</span>
+                                </h5>
+                                <span class="delete-model" data-model="${name}" style="cursor:pointer" title="Delete">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm3.354-9.354a.5.5 0 1 1 .708.708L8.707 8l3.355 3.354a.5.5 0 0 1-.708.708L8 8.707l-3.354 3.355a.5.5 0 1 1-.708-.708L7.293 8 3.939 4.646a.5.5 0 1 1 .708-.708L8 7.293l3.354-3.647z"/>
+                                    </svg>
+                                </span>
+                            </div>
                             <p class="model-status ${statusClass}">${statusText}</p>
                             <p class="card-text">
-                                <small class="text-muted">Last check: ${lastCheck}</small>
+                                <small class="text-muted model-lastcheck">Last check: ${lastCheck}</small>
                             </p>
                             <div class="form-check form-switch">
-                                <input class="form-check-input model-toggle" type="checkbox" 
-                                    id="toggle-${name}" 
-                                    data-model="${name}" 
+                                <input class="form-check-input model-toggle" type="checkbox"
+                                    id="toggle-${name}"
+                                    data-model="${name}"
                                     ${status.status !== 'disabled' ? 'checked' : ''}>
                                 <label class="form-check-label" for="toggle-${name}">Enabled</label>
                             </div>
@@ -2016,8 +2025,16 @@
 
             return appliedCount;
         }        // Socket event listeners
+        let currentModelStatus = {};
         socket.on('health-update', function(modelStatus) {
-            renderModels(modelStatus);
+            currentModelStatus = modelStatus;
+            const container = document.getElementById('modelsContainer');
+            const cards = container.querySelectorAll('.model-col').length;
+            if (cards !== Object.keys(modelStatus).length) {
+                renderModels(modelStatus);
+            } else {
+                updateModelStatuses(modelStatus);
+            }
         });
 
         socket.on('prediction-result', function(result) {
@@ -2063,19 +2080,11 @@
             // You can add error handling/notification here if desired
         });
 
-        // Function to render all models
-        function renderModels(modelStatus) {
-            const container = document.getElementById('modelsContainer');
-            let html = '';
-            
-            for (const [modelName, status] of Object.entries(modelStatus)) {
-                html += renderModel(modelName, status);
-            }
-            
-            container.innerHTML = html;
-
-            // Add event listeners to model toggles
+        function attachModelListeners(container) {
+            // toggles
             container.querySelectorAll('.model-toggle').forEach(toggle => {
+                if (toggle.dataset.listener) return;
+                toggle.dataset.listener = 'true';
                 toggle.addEventListener('change', function() {
                     const modelName = this.dataset.model;
                     const enabled = this.checked;
@@ -2083,8 +2092,10 @@
                 });
             });
 
-            // Add event listeners to editable names
+            // editable names
             container.querySelectorAll('.editable-name').forEach(span => {
+                if (span.dataset.listener) return;
+                span.dataset.listener = 'true';
                 span.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
@@ -2100,14 +2111,75 @@
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ modelName, displayName: newName })
-                        })
-                        .then(res => res.json())
-                        .then(() => {
+                        }).then(res => res.json()).then(() => {
                             modelDisplayNames[modelName] = newName;
                         });
                     }
                 });
             });
+
+            // delete buttons
+            container.querySelectorAll('.delete-model').forEach(btn => {
+                if (btn.dataset.listener) return;
+                btn.dataset.listener = 'true';
+                btn.addEventListener('click', async function() {
+                    const modelName = this.dataset.model;
+                    if (!confirm(`Delete model '${modelDisplayNames[modelName] || modelName}'?`)) return;
+                    await fetch('/api/config/model/delete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ modelName })
+                    });
+                    const cfg = await fetch('/api/config').then(r => r.json());
+                    modelDisplayNames = {};
+                    cfg.models.forEach(m => {
+                        modelDisplayNames[m.name] = m.displayName || m.name;
+                    });
+                    socket.emit('request-health');
+                });
+            });
+        }
+
+        function renderModels(modelStatus) {
+            const container = document.getElementById('modelsContainer');
+            let html = '';
+            for (const [modelName, status] of Object.entries(modelStatus)) {
+                html += renderModel(modelName, status);
+            }
+            container.innerHTML = html;
+            attachModelListeners(container);
+        }
+
+        function updateModelStatuses(modelStatus) {
+            for (const [name, status] of Object.entries(modelStatus)) {
+                const card = document.getElementById(`model-card-${name}`);
+                if (!card) continue;
+                const statusClass = {
+                    'online': 'status-online',
+                    'offline': 'status-offline',
+                    'disabled': 'status-disabled',
+                    'unknown': 'status-unknown'
+                }[status.status] || 'status-unknown';
+
+                const statusText = {
+                    'online': 'Online',
+                    'offline': 'Offline',
+                    'disabled': 'Disabled',
+                    'unknown': 'Unknown'
+                }[status.status] || 'Unknown';
+
+                const lastCheck = status.lastCheck ? formatDate(status.lastCheck) : 'Never';
+
+                const statusEl = card.querySelector('.model-status');
+                statusEl.className = `model-status ${statusClass}`;
+                statusEl.textContent = statusText;
+
+                const lastEl = card.querySelector('.model-lastcheck');
+                if (lastEl) lastEl.textContent = `Last check: ${lastCheck}`;
+
+                const toggle = card.querySelector('.model-toggle');
+                if (toggle) toggle.checked = status.status !== 'disabled';
+            }
         }
 
         // When DOM is ready

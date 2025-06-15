@@ -75,6 +75,14 @@ module.exports = {
     };
     return key;
   },
+
+  // Elimina un modelo de la configuración
+  removeModel(modelName) {
+    if (!persistentConfig.models[modelName]) {
+      throw new Error(`Modelo '${modelName}' no encontrado`);
+    }
+    delete persistentConfig.models[modelName];
+  },
   
   // Request timeouts
   timeouts: {

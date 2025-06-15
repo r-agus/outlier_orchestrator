@@ -327,6 +327,46 @@ class OrchestratorController {
       });
     }
   }
+
+  /**
+   * Elimina un modelo de la configuración
+   */
+  async deleteModel(req, res) {
+    try {
+      const { modelName } = req.body;
+
+      if (!modelName) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          error: 'Se requiere nombre de modelo'
+        });
+      }
+
+      if (!config.models[modelName]) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          error: `Modelo '${modelName}' no encontrado`
+        });
+      }
+
+      config.removeModel(modelName);
+
+      return res.status(StatusCodes.OK).json({
+        message: `Modelo '${modelName}' eliminado`,
+        models: Object.keys(config.models).map(model => ({
+          name: model,
+          enabled: config.models[model].enabled,
+          url: config.models[model].url,
+          trainingUrl: config.models[model].trainingUrl,
+          healthUrl: config.models[model].healthUrl,
+          displayName: config.models[model].displayName
+        }))
+      });
+    } catch (error) {
+      logger.error(`Error al eliminar modelo: ${error.message}`);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        error: error.message
+      });
+    }
+  }
 }
 
 module.exports = new OrchestratorController();
