@@ -12,6 +12,7 @@ jobs:
 
     container:
       image: ghcr.io/outlierclassifier/dataset_reduced:2025-06-15
+      options: --user 0
 
     permissions:
       contents: read
@@ -24,12 +25,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node 20 + pnpm
+      - name: Setup Node 20 + npm
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
-      - run: pnpm install --frozen-lockfile
+          cache: 'npm'
+      - run: npm install
 
       - uses: actions/checkout@v4
         with:
