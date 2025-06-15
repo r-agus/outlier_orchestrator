@@ -52,9 +52,9 @@ jobs:
 
       - name: Launch model services
         run: |
-          ./services/svm/target/release/svm_api &
+          ./services/svm/target/release/svm &
           SVM_PID=$!
-          ./services/ocsvm/target/release/ocsvm_api &
+          ./services/ocsvm/target/release/ocsvm &
           OCSVM_PID=$!
 
           # Wait until ports are ready 
