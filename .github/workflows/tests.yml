@@ -69,7 +69,7 @@ jobs:
           echo "OCSVM_PID=$OCSVM_PID" >> $GITHUB_ENV
 
       - name: Run orchestrator tests
-        run: pnpm test
+        run: npm test
 
       - name: Shutdown model services
         if: always()
