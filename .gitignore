@@ -6,6 +6,9 @@ yarn-debug.log
 package-lock.json
 yarn.lock
 
+# Datos de entrenamiento
+remuestreados/
+
 # Entorno
 .env
 .env.test
